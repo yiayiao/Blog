@@ -1,0 +1,4 @@
+.deploy_git/*
+public/*
+!.deploy_git/.git/
+
