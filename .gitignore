@@ -1,7 +1,4 @@
-/.deploy_git/*
-/public/*
-/themes/*
-themes/*
-/laboratory/*
-/.deploy_git/.git/
-
+/public/
+/themes/
+/laboratory/
+/.deploy_git/
