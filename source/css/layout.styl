@@ -1,0 +1,100 @@
+// configuration of framework's layout
+
+html, body, #container {
+}
+
+body {
+  background: color-background;
+  font: font-size font-sans;
+  -webkit-text-size-adjust: 100%; 
+}  
+
+#nav-leftbar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  height: 100%;
+}
+
+#main-content {
+  margin-right: 120px;
+    
+  #main {
+    width: 1300px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  
+    #post-list-nav {
+      width: 300px;
+      margin-top: 20px;
+      padding-right: 10px;
+      padding-left: 10px;
+      position: fixed;
+    }
+    
+    #post-list-full {
+      margin-top: 20px;
+      padding-left: 10px;
+      float: right;
+      width: 1000px;
+      border-left: 1px solid #eee;
+      overflow: auto;
+      word-wrap: break-word;
+    }
+  }
+} 
+
+@media mq-bigscreen {
+  #nav-topbar {
+    display: none;
+  }
+}
+
+@media mq-normal {
+  #nav-leftbar {
+    display: none;
+  }
+  
+  #main-content {
+    margin-right: 0;
+    margin-top: 80px;
+  
+    #main {
+      width: 100%;
+      max-width: 1300px;
+      
+      #post-list-nav {
+        width: 20%;
+        max-width: 260px;
+      }
+      
+      #post-list-full {
+         width: 80%;
+         max-width: 1040px;
+      }
+    }
+  }
+}
+
+@media mq-tablet {
+  #nav-leftbar {
+    display: none;
+  }
+  
+  #main-content {
+    margin-left: 0;
+  
+    #main {
+      width: 100%;
+      
+      #post-list-nav {
+        width: 20%;
+      }
+      
+      #post-list-full {
+         width: 80%;
+      }
+    }
+  }
+}

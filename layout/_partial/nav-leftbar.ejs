@@ -1,0 +1,25 @@
+<div id="nav-leftbar">
+<table class="nav-table">
+  <tr class="nav-home">
+    <td>
+      <button type="button" class="btn btn-primary nav-btn" onClick="location='/'">Home</button>
+    </td>
+  </tr>
+  <tr>
+    <td class="nav-list">
+      <div class="nav-item">
+        <button type="button" class="btn btn-info nav-btn">Category</button>
+        <%- list_categories({depth: -1}) %>
+      </div>
+      <div class="nav-item">  
+        <button type="button" class="btn btn-info nav-btn">Tag</button>
+        <%- list_tags({}) %>
+      </div>
+      <div class="nav-item">  
+        <button type="button" class="btn btn-info nav-btn">Archive</button>
+        <%- list_archives({type: 'yearly'}) %>
+      </div>
+    </td>
+  </tr>
+</table>
+</div>

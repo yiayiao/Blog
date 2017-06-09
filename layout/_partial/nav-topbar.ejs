@@ -1,0 +1,60 @@
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-topbar" data-ispost = "<%- is_post() %>" data-istags="<%- is_tag() %>
+" data-ishome = "<%- is_home() %>" >
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+           
+        </div>
+
+        <div id="huxblog_navbar">
+          <table class="nav-table">
+              <tr>
+                  <td class="nav-list-td">
+                      <button type="button" class="btn btn-info nav-btn" onClick="location='/'">Category</button>
+                      <button type="button" class="btn btn-info nav-btn" onClick="location='/'">Tag</button>
+                      <button type="button" class="btn btn-info nav-btn" onClick="location='/'">Archive</button>
+                  </td>
+                  <td style="width: 100px">
+                  <button type="button" class="btn btn-primary nav-btn" onClick="location='/'">Home</button>
+                  </td>
+              </tr>
+          </table>
+
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>

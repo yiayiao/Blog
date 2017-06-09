@@ -1,0 +1,47 @@
+<% if (concise == true) { %>
+
+<div class="post-content">
+  <a class="header" style="display: inline-block;" href="<%- url_for("#" + post.title) %>">
+    <%if(post.top) {%>
+      <span class="ui teal label"><%= __('index.top')%></span>
+    <%}%>
+    <%if(post.recommend) {%>
+      <span class="ui teal label"><%= __('recommend')%></span>
+    <%}%>
+    <%= post.title %>
+  </a>
+  <div class="post-description">
+    <span class="post-description-item">
+      <%- partial('_partial/post/date', {post: post, class_name: '', date_format: null, hideLink: true})%>
+    </span>
+    <span class="post-description-item">
+      <%- partial('_partial/post/tag', {post: post})%>
+    </span>
+  </div>
+</div>
+
+<% } else { %>
+
+<div class="post-list" id="<%= post.title %>">
+  <div class="post-list-item">
+    <h3 class="article-header">
+      <a href="<%- url_for(post.link || post.path) %>" <%= post.link ? 'target="_blank"' : '' %>>
+        <%= post.title %>
+      </a>
+    </h3>
+    <%- partial('_partial/post/gallery', {post: post}) %>
+    <div class="article-info">
+      <a href="<%- url_for(post.path) %>"><%- partial('_partial/post/date', {post: post}) %></a>
+      <%- partial('_partial/post/category', {post: post}) %>
+      <%- partial('_partial/post/tag', {post: post}) %>
+    </div>
+    <div class="article-entry">
+      <div class="toc">
+        <%- toc_semantic(post.content) %>
+      </div>
+      <%- post.content %>
+    </div>
+  </div>
+</div>
+
+<% } %>

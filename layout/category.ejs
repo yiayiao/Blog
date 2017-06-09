@@ -1,0 +1,18 @@
+<div id="post-list-nav">
+  <% page.posts.each(function(post){ %>
+    <%- partial('_partial/post-item', {post: post, concise: true})%>
+  <% }) %>
+<% if (page.total > 1){ %>
+  <nav id="page-nav">
+    <%- paginator({
+      prev_text: "&laquo; __('prev')",
+      next_text: "__('next') &raquo;"
+    }) %>
+  </nav>
+<% } %>
+</div>
+<div id="post-list-full">
+  <% page.posts.each(function(post){ %>
+    <%- partial('_partial/post-item', {post: post, concise: false})%>
+  <% }) %>
+</div>
