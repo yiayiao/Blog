@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Yi~ A~ Yi~ A~ O~
+title: YiaYiaO
 subtitle: 唐老鸭有一个农场
 description: Mr. Leon like to do something intereting and keep intereting things in his blog.
 author: Leon
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: chan 
+theme: unity 
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
