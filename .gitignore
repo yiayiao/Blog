@@ -1,1 +1,3 @@
 db.json
+/themes/*
+!/themes/load_themes.sh
