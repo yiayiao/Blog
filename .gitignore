@@ -1,4 +1,5 @@
-db.json
-themes/*
-!themes/load_themes.sh
+/db.json
+/themes/*
+!/themes/load_themes.sh
+/public/
 
