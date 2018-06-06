@@ -1,5 +1,6 @@
 /db.json
 /themes/*
 !/themes/load_themes.sh
+!/themes/_config.yml
 /public/
 
