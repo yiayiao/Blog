@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="题记即使失败了无数次，还是要相信成功会在下一次。最近时常有一种被时间推着走的感觉，毕业不久就陷入了一种“新常态”下的生活，也时常会试着做一些改变，却感觉生活的陷阱总是无处不在。从前年开始准备留学，付出了不少努力，但是APS审核失败，即使三个月之后申请成功，入学也得等到明年九月了。是否应该放弃，心里是有些纠结的；但是否还需要继续努力，我相信这个答案是毫无疑问的，顶多就是换一个方向，从头再来而已。“或">
+<meta property="og:type" content="article">
+<meta property="og:title" content="建设自己的Hexo主题">
+<meta property="og:url" content="http://blog.yiayiao.com/2017/05/30/setup-my-blog/index.html">
+<meta property="og:site_name" content="YiaYiaO">
+<meta property="og:description" content="题记即使失败了无数次，还是要相信成功会在下一次。最近时常有一种被时间推着走的感觉，毕业不久就陷入了一种“新常态”下的生活，也时常会试着做一些改变，却感觉生活的陷阱总是无处不在。从前年开始准备留学，付出了不少努力，但是APS审核失败，即使三个月之后申请成功，入学也得等到明年九月了。是否应该放弃，心里是有些纠结的；但是否还需要继续努力，我相信这个答案是毫无疑问的，顶多就是换一个方向，从头再来而已。“或">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-18T04:51:56.055Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="建设自己的Hexo主题">
+<meta name="twitter:description" content="题记即使失败了无数次，还是要相信成功会在下一次。最近时常有一种被时间推着走的感觉，毕业不久就陷入了一种“新常态”下的生活，也时常会试着做一些改变，却感觉生活的陷阱总是无处不在。从前年开始准备留学，付出了不少努力，但是APS审核失败，即使三个月之后申请成功，入学也得等到明年九月了。是否应该放弃，心里是有些纠结的；但是否还需要继续努力，我相信这个答案是毫无疑问的，顶多就是换一个方向，从头再来而已。“或">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.yiayiao.com/2017/05/30/setup-my-blog/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>建设自己的Hexo主题 | YiaYiaO</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YiaYiaO</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">唐老鸭有一个农场，咿啊咿啊噢</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />日程表</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2017/05/30/setup-my-blog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leon">
+      <meta itemprop="description" content="Mr. Leon like to do something intereting and keep intereting things in his blog.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YiaYiaO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">建设自己的Hexo主题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-05-30 21:11:21" itemprop="dateCreated datePublished" datetime="2017-05-30T21:11:21+08:00">2017-05-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-18 12:51:56" itemprop="dateModified" datetime="2018-11-18T12:51:56+08:00">2018-11-18</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="题记"><a href="#题记" class="headerlink" title="题记"></a>题记</h1><p>即使失败了无数次，还是要相信成功会在下一次。<br>最近时常有一种被时间推着走的感觉，毕业不久就陷入了一种“新常态”下的生活，也时常会试着做一些改变，却感觉生活的陷阱总是无处不在。从前年开始准备留学，付出了不少努力，但是APS审核失败，即使三个月之后申请成功，入学也得等到明年九月了。是否应该放弃，心里是有些纠结的；但是否还需要继续努力，我相信这个答案是毫无疑问的，顶多就是换一个方向，从头再来而已。<br>“或许自己确实资质不够”，每次这么想，压力确实可以释怀一些；然而人生时很奇妙的，只要不断的努力，失败的次数越来越多，人在不断遭遇打击之后，失败带来的挫败感反而变淡了。我想一只狮子再追捕羚羊失败后，总不至于嫌弃自己跑得太慢，因为这种想法对它没有意义，就算他跑得和乌龟一样慢，下次遇到羚羊还得追，不是吗。奋斗可以实现更好的自己，最起码的便是改变人的自卑；一直在努力的人，inde内心大多比较积极。<br>不过也确实需要定一个小目标，找一点成功的感觉，比如写一个博客。作为一个程序员，用代码去实现一个东西是一件很有乐趣的事情，对我而言，我想修改一个bug的乐趣不如实现一个功能，实现一个功能不如负责一套架构，负责一套架构又比不上将一个项目重头撸到尾。写一个Hexo主题是挺好的，它简单不复杂，当然要做好也有那么些难度，过程中又能学习一些前端的知识，思考一下设计什么的，而且的是写好了自己还能用，那就是乐趣无穷了。</p>
+<h1 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h1><p>写在2017年6月10日，周六，南京，雨。<br>昨天晚上，自己的博客V1.0版问世了，虽然看起来还很土，Home页和Article页的博文样式都不一致，菜单的下拉效果也没有实现。除了自己台式机的大屏(min-width: 1500px)，计划的手机屏(max-width: 479px),Pad屏(min-width: 480px) and (max-width: 767px)还有笔记本屏(min-width: 768px) and (max-width: 1500px)都没有做到适配。<br>这个版本放到随便一个前端从业者的面前，多半都会被吐槽，这他妈也能叫V1.0版，V0.1版还差不多，随便找个计算机专业的大学生也能做到这水平。这我得认，想我大一大二的时候，也是资质聪慧的一个少年，刚上大学时连word都不会用，但是大一刚结束，我已经搞起了ACM，到大二时写个小网站什么的已经很麻溜了。但是到了后来，不知道时忙于爱情丢了智商，还是年纪大了脑袋僵化，从大三下学期开始，老实说自己没做什么事情。参加工作之后，忙着全世界出差体验生活，干脆把计算机看家本领也丢在一边了，所以自己的前端水平，应该也就是大二，可能还退步了些。<br>扯得远了，之所以动手写自己的主题，是因为自己对于博客的设计，是有一些自己的想法的。</p>
+<h2 id="主旨"><a href="#主旨" class="headerlink" title="主旨"></a>主旨</h2><p>现在很多人都已经习惯在手机上阅读了，电脑除了电脑游戏之外，已经逐步丧失了其绝大部分的娱乐功能，”surf the internet”，之前大家在电脑上浏览网页的时代，已经成为过去了，随着PC冷却的还有博客，为什么我还在写自己的博客呢，都是因为爱啊。我喜欢阅读一些东西，也喜欢写一些东西，语言和文字，并部只是大家沟通的工具，人是一种娱乐的动物，语言和文字，也变成了我们娱乐的工具，于是才有了作家，有了诗人，有了那些风骚绝伦的诗词。阅读时一种娱乐，是最古老的娱乐方式之一，至今热度不减。我认为，看朋友圈不叫阅读，看头条更不叫，因为不够娱乐，没有享受到文字带来的乐趣，历史延绵不绝，文学笔法被不断的丰富，或情节激荡，或辞藻优美，如同川菜调料一样，辣椒胡椒豆瓣酱，蒜苗老姜老陈醋，加上最好的五花肉，这是主题，就变成了一锅香喷喷的回锅肉，哦不对，是一篇爽人的美文。我相信大家时需要这种娱乐的，为什么老是觉得浮躁啊，因为看书少了，就像吃饭没吃饱，老是觉得饿。<br>所以我要写博客，写大篇幅，做大餐。所以我的博客，首先应该以博文为中心，内容为中心，文字为中心，博客不是我张扬性格的工具，花哨的二次元的背景我不想要，顶部醒目菜单我也不想要，头像啥的可以没有，另外tag，category什么的，我觉得最好也隐藏起来，我这样的人容易精力不集中。</p>
+<h3 id="屏幕适配，响应式布局"><a href="#屏幕适配，响应式布局" class="headerlink" title="屏幕适配，响应式布局"></a>屏幕适配，响应式布局</h3>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/17/start-nodejs/" rel="next" title="start-nodejs">
+                <i class="fa fa-chevron-left"></i> start-nodejs
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/17/config-ubuntu/" rel="prev" title="我的Ubuntu操作系统配置">
+                我的Ubuntu操作系统配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Leon</p>
+              <p class="site-description motion-element" itemprop="description">Mr. Leon like to do something intereting and keep intereting things in his blog.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题记"><span class="nav-number">1.</span> <span class="nav-text">题记</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第一版"><span class="nav-number">2.</span> <span class="nav-text">第一版</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主旨"><span class="nav-number">2.1.</span> <span class="nav-text">主旨</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#屏幕适配，响应式布局"><span class="nav-number">2.1.1.</span> <span class="nav-text">屏幕适配，响应式布局</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这会是一系列博客，持续记录了自己的Hexo建站，主题优化过程。笔者时一个爱死磕的人，伪处女座，喜欢为了一点网页细节折腾到底，这常常是一个费力不讨好的活，不必计较，就当作一个爱好吧。索性将自己的建站之路记录下来，作一个“打怪升级”的小记。 什么样的博客样式感觉好看写下这个标题，“样式”两个字斟酌了一下，没有说“主题”，尽管修改样式就是在编辑theme；也没有谈“设计”，我不是设计出生，谈到设计感觉逼">
+<meta name="keywords" content="Blog Setup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo 建站小记">
+<meta property="og:url" content="http://blog.yiayiao.com/2017/02/19/theme-development/index.html">
+<meta property="og:site_name" content="YiaYiaO">
+<meta property="og:description" content="这会是一系列博客，持续记录了自己的Hexo建站，主题优化过程。笔者时一个爱死磕的人，伪处女座，喜欢为了一点网页细节折腾到底，这常常是一个费力不讨好的活，不必计较，就当作一个爱好吧。索性将自己的建站之路记录下来，作一个“打怪升级”的小记。 什么样的博客样式感觉好看写下这个标题，“样式”两个字斟酌了一下，没有说“主题”，尽管修改样式就是在编辑theme；也没有谈“设计”，我不是设计出生，谈到设计感觉逼">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-18T04:51:56.055Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo 建站小记">
+<meta name="twitter:description" content="这会是一系列博客，持续记录了自己的Hexo建站，主题优化过程。笔者时一个爱死磕的人，伪处女座，喜欢为了一点网页细节折腾到底，这常常是一个费力不讨好的活，不必计较，就当作一个爱好吧。索性将自己的建站之路记录下来，作一个“打怪升级”的小记。 什么样的博客样式感觉好看写下这个标题，“样式”两个字斟酌了一下，没有说“主题”，尽管修改样式就是在编辑theme；也没有谈“设计”，我不是设计出生，谈到设计感觉逼">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.yiayiao.com/2017/02/19/theme-development/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Hexo 建站小记 | YiaYiaO</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YiaYiaO</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">唐老鸭有一个农场，咿啊咿啊噢</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />日程表</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2017/02/19/theme-development/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leon">
+      <meta itemprop="description" content="Mr. Leon like to do something intereting and keep intereting things in his blog.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YiaYiaO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hexo 建站小记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-02-19 22:26:43" itemprop="dateCreated datePublished" datetime="2017-02-19T22:26:43+08:00">2017-02-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-18 12:51:56" itemprop="dateModified" datetime="2018-11-18T12:51:56+08:00">2018-11-18</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这会是一系列博客，持续记录了自己的Hexo建站，主题优化过程。笔者时一个爱死磕的人，伪处女座，喜欢为了一点网页细节折腾到底，这常常是一个费力不讨好的活，不必计较，就当作一个爱好吧。索性将自己的建站之路记录下来，作一个“打怪升级”的小记。</p>
+<h2 id="什么样的博客样式感觉好看"><a href="#什么样的博客样式感觉好看" class="headerlink" title="什么样的博客样式感觉好看"></a>什么样的博客样式感觉好看</h2><p>写下这个标题，“样式”两个字斟酌了一下，没有说“主题”，尽管修改样式就是在编辑theme；也没有谈“设计”，我不是设计出生，谈到设计感觉逼格略高。决定亲民一点，就像女生谈漂亮衣服，聊什么样的款式好看，这里用“样式”这个词，我们像聊衣服，随便聊聊网页。一下所记，都是自己之前挑选主题和看别人博客时的一些粗糙想法，没有理论依据，等博客评论开放后望大家多多交流。</p>
+<ol>
+<li>内容没有占到屏幕一半的网页不怎么好看，有些博客内容只有一张A4纸宽，处在屏幕正中，每次看到这样的博客，我有一种想要缩小浏览器窗口使之适应内容的冲动，所以应该不怎么好看。[2017年2月19日] </li>
+<li>会弹出广告的博客肯定不好看，所以我没有选择新浪博客和CSDN的原因，所以网页上有悬浮框也不怎么好看，给人一种想点它的冲动。[2017年2月19日] </li>
+<li>边框怎么处理都觉得不是很好看，边框和分割线给我一种上世纪的感觉，减少边框，减少分割线，用明暗阴影做分割。[2017年2月26日] </li>
+</ol>
+<h2 id="主题优化记"><a href="#主题优化记" class="headerlink" title="主题优化记"></a>主题优化记</h2><p>其实Hexo默认的landscape主题就挺不错的，不过本着一贯的折腾精神，自然不满足于默认的东西，而且自己不是很喜欢landscape类似的主题风格。landscape顶部有一块很大的区域，用于展示标题和主要菜单，背景往往是纯色或者图片；感觉这种风格首先有点浪费空间，那么大一块区域，只展示标题和副标题等很少的内容，其次背景放纯色有点单调，放图片又有点耗流量，而且菜单基本上都只展示一级，不然子菜单下拉下来影响体验。</p>
+<p>第一个选中的主题是Light。<br>后来选的主题是Chan。</p>
+<h3 id="1-优化CodeBlock代码块"><a href="#1-优化CodeBlock代码块" class="headerlink" title="1. 优化CodeBlock代码块"></a>1. 优化CodeBlock代码块</h3><p>Chan主题的代码块上下有两条明显的边框，个人观点，边框是不好看的，所以我要把它修改掉。</p>
+<p>— 先写到这里</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Blog-Setup/" rel="tag"># Blog Setup</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/18/glimpse-of-hexo/" rel="next" title="A Glimpse of Hexo">
+                <i class="fa fa-chevron-left"></i> A Glimpse of Hexo
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/17/start-nodejs/" rel="prev" title="start-nodejs">
+                start-nodejs <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Leon</p>
+              <p class="site-description motion-element" itemprop="description">Mr. Leon like to do something intereting and keep intereting things in his blog.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么样的博客样式感觉好看"><span class="nav-number">1.</span> <span class="nav-text">什么样的博客样式感觉好看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题优化记"><span class="nav-number">2.</span> <span class="nav-text">主题优化记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-优化CodeBlock代码块"><span class="nav-number">2.1.</span> <span class="nav-text">1. 优化CodeBlock代码块</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
