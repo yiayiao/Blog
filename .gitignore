@@ -3,4 +3,5 @@
 !/themes/load_themes.sh
 !/themes/_config.yml
 /public/
+.deploy_git
 
