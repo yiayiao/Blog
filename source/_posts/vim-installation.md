@@ -18,9 +18,7 @@ Once you have followed the guide and finished the installation of vim, you can t
 vim test.py
 ```
 
-If everything is OK and there is no error on you terminal page, congratulations, enjoy your Vim. But during my configuration, I got a error:
-
-![error](pyflakes-error.png) 
+If everything is OK and there is no error on you terminal page, congratulations, enjoy your Vim. But during my configuration, I got a error:{% asset_img pyflakes-error.png This is an image %}
 
 When I searched the internet, there was a page written that pyflakes is obsoleting, and flake8 was suggested to replace pyflakes. So I removed the plug-in pyflakes and then installed flake8.
 
