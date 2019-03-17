@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="YiaYiaO">
 <meta property="og:description" content="&amp;emsp;&amp;emsp;这篇博文的名字叫做Hexo的基本操作，可想而知我的博客是通过Hexo搭建起来的。博客托管在了Github Pages上，域名是在阿里云上购买的，为了方便记忆，你可以哼唱一首儿歌：“唐老鸭有一个农村，咦啊咦啊哦”。 &amp;emsp;&amp;emsp;安装Hexo前，需要先安装Git和Node.js，在官网上有详细的指导，Hexo的安装请参见官网安装指导。如果希望更详细一些，每一步的截图">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-16T14:27:35.887Z">
+<meta property="og:updated_time" content="2019-03-17T13:22:20.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo基本操作">
 <meta name="twitter:description" content="&amp;emsp;&amp;emsp;这篇博文的名字叫做Hexo的基本操作，可想而知我的博客是通过Hexo搭建起来的。博客托管在了Github Pages上，域名是在阿里云上购买的，为了方便记忆，你可以哼唱一首儿歌：“唐老鸭有一个农村，咦啊咦啊哦”。 &amp;emsp;&amp;emsp;安装Hexo前，需要先安装Git和Node.js，在官网上有详细的指导，Hexo的安装请参见官网安装指导。如果希望更详细一些，每一步的截图">
@@ -387,7 +387,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-16 22:27:35" itemprop="dateModified" datetime="2019-03-16T22:27:35+08:00">2019-03-16</time>
+                <time title="修改时间：2019-03-17 21:22:20" itemprop="dateModified" datetime="2019-03-17T21:22:20+08:00">2019-03-17</time>
               
             
           </span>
@@ -506,6 +506,11 @@
 <td>文件生成后立即部署网站</td>
 </tr>
 <tr>
+<td>hexo generate --watch</td>
+<td>hexo g -w</td>
+<td>监视文件变动并立即重新生成静态HTML</td>
+</tr>
+<tr>
 <td>hexo deploy</td>
 <td>hexo d</td>
 <td>部署网站</td>
@@ -517,7 +522,7 @@
 </tr>
 </tbody>
 </table>
-<p>&emsp;&emsp;你看到上面的几行命令是否也有这样的困惑，“hexo d”命令与“hexo g -d”、“hexo d -g”命令有什么区别，我自己实验后感觉是，没有区别！执行“hexo d”命令，从日志看Hexo就会先生成静态文件，与另外两条命令是一致的。从自己基础阶段常用的Hexo操作来看，“hexo g”这个命令都显得很鸡肋。<br>&emsp;&emsp;掌握“hexo s”命令，本地博文的任何修改都能实时更新并查看效果，“hexo g -w”和“hexo s -s”命令一起也有与“hexo s”命令一样的效果，却更加繁琐。而掌握“hexo d”一条命令，就能完成自己博文的上传，无需事先执行“hexo g”命令。为了应对可能出现的未知错误，可以再记一条“hexo clean”，在“hexo d”命令前执行。</p>
+<p>&emsp;&emsp;你看到上面的几行命令是否也有这样的困惑，“hexo d”命令与“hexo g -d”、“hexo d -g”命令有什么区别，我自己实验后感觉是，没有区别！执行“hexo d”命令，从日志看Hexo就会先生成静态文件，与另外两条命令是一致的。从自己目前常用的Hexo操作来看，“hexo g”这个命令都显得很鸡肋。<br>&emsp;&emsp;掌握“hexo s”命令，本地博文的任何修改都能实时更新并查看效果，“hexo g -w”和“hexo s -s”命令一起也有与“hexo s”命令一样的效果，却更加繁琐。而掌握“hexo d”一条命令，就能完成自己博文的上传，无需事先执行“hexo g”命令。为了应对可能出现的未知错误，可以再记一条“hexo clean”，在“hexo d”命令前执行。</p>
 <h3 id="一些常用的配置"><a href="#一些常用的配置" class="headerlink" title="一些常用的配置"></a>一些常用的配置</h3>
       
     </div>
