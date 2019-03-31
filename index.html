@@ -326,6 +326,197 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/03/31/install-mariadb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leon">
+      <meta itemprop="description" content="君子励锋芒之剑</br>隐而不发">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YiaYiaO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/03/31/install-mariadb/" class="post-title-link" itemprop="url">Ubuntu安装使用MariaDB</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-31 11:09:23 / 修改时间：18:08:53" itemprop="dateCreated datePublished" datetime="2019-03-31T11:09:23+08:00">2019-03-31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/Web/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Ubuntu上安装MariaDB的经历，其挫折系数仅次于数年前安装Oracle。然而安装完成之后再回头看，其实也并没有那么复杂，搞出这么多幺蛾子，还是自己因为自己对MySQL和MariaDB一知半解，吃了没文化的亏。</p>
+<p>MadiaDB数据库是MySQL数据库的一个非常活跃的分支，为什么要安装MariaDB，因为MySQL被Oracle公司收购之后，更新节奏变慢，而且有被Oracle闭源的风险。所以，是时候跟着MySQL之父Michael Widenius一起拥抱MariaDB了。</p>
+<p>我的Ubuntu系统为Ubuntu 18.04 LTS，安装的MariaDB版本为<strong>10.3</strong>版本，下面给出安装命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#安装依赖包</span><br><span class="line">apt install software-properties-common -y</span><br><span class="line">#添加密钥</span><br><span class="line">apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8</span><br><span class="line">#添加PPA源</span><br><span class="line">add-apt-repository &apos;deb [arch=amd64] http://mirrors.tuna.tsinghua.edu.cn/mariadb/repo/10.3/ubuntu bionic main&apos;</span><br><span class="line">#安装mariadb-server</span><br><span class="line">apt update</span><br><span class="line">apt install mariadb-server -y</span><br></pre></td></tr></table></figure>
+<p><em>如果你想要安装10.2, 10.1, 5.5等其他版本的MariaDB，请将命令中的10.3替换为对应的版本号</em></p>
+<p>怎么样，是不是很简单，那我怎么就掉进了坑里了？怎么掉进去的我也不知道，当我重启电脑之后，发现MariaDB数据库没起来。我尝试用“systemctl start mysql”命令启动MariaDB，启动了一段时间之后启动失败了，根据提示使用“journalctl -xe”查看错误日志，发现日志中如下的错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kernel: [ 2336.792423] audit: type=1400 audit(1470265086.730:518): apparmor=&quot;DENIED&quot; operation=&quot;sendmsg&quot; info=&quot;Failed name lookup - disconnected path&quot; error=-13 profile=&quot;/usr/sbin/mysqld&quot; name=&quot;run/systemd/notify&quot; pid=11850 comm=&quot;mysqld&quot; requested_mask=&quot;w&quot; denied_mask=&quot;w&quot; fsuid=117 ouid=0</span><br></pre></td></tr></table></figure>
+<p>从日志里面看，MariaDB启动失败和apparmor有关，apparmor是什么东西，遇到这个问题之前我不懂，因为这个问题我简单了解了一下，apparmor安全策略用于定义个别程序可以访问的系统资源以及各自的特权，简单理解一下，是一个做安全配置的东西。当我根据网上搜来的一些指导去编辑MySQL的安全配置文件“/etc/apparmor.d/usr.sbin.mysqld”时，我注意到文件内容是空的，仅有如下一段注释说明：</p>
+<blockquote>
+<p># <b>This file is intentionally empty to disable apparmor by default</b> for newer<br># versions of MariaDB, while providing seamless upgrade from older versions<br># and from mysql, where apparmor is used.<br>#<br># By default, <b>we do not want to have any apparmor profile for the MariaDB</b><br># server. It does not provide much useful functionality/security, and causes<br># several problems for users who often are not even aware that apparmor<br># exists and runs on their system.<br>#<br># Users can modify and maintain their own profile, and in this case it will<br># be used.<br>#<br># When upgrading from previous version, users who modified the profile<br># will be prompted to keep or discard it, while for default installs<br># we will automatically disable the profile.</p>
+</blockquote>
+<p>注意上文中被我加粗的内容，MariaDB默认是关闭了apparmor策略的，那为什么还是被apparmor搞得启都启不来了，一脸懵逼。随后我继续尝试搜索解决方案，按照网上的一些教程对apparmor配置文件进行了配置，取得了一些进展，不过仅限于日志中的错误信息发生了变化。</p>
+<p>最后还是在<a href="https://stackoverflow.com/questions/22473830/docker-and-mysql-libz-so-1-cannot-open-shared-object-file-permission-denied" title="solve" target="_blank" rel="noopener">stackoverflow</a>中找到了解决方法，解决方法还是关闭MariaDB的apparmor配置，使用下面的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#Type this on your host terminal</span><br><span class="line">sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/</span><br><span class="line">sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld</span><br></pre></td></tr></table></figure>
+<p>在博客园的一篇博客中，找到了对上述操作的解释，/etc/apparmor.d/disable目录可以和apparmor_parser -R选项一起使用以禁用一个配置文件，这里给出<a href="http://www.cnblogs.com/popsuper1982/p/3818116.html" title="solve" target="_blank" rel="noopener">链接</a>。</p>
+<p>写这篇博客时，我尝试将它写得悲壮一点，像读者传递一下解决问题过程中的艰辛，但是写博客的过程中，我渐渐放弃了这个想法，还是写得朴实一点，把事情写清楚最重要。对于我们大多数程序猿来说，解决问题就是我们的日常，每当解决了一个问题，就积累了一些经验，所以面对问题，我们应该抱有积极的心态。在解决这个问题的过程中，我将MariaDB翻来覆去安装了很多遍，配置文件改了又改，在MySQL的配置，以及日志的查看等方面有学到了一些知识。</p>
+<p>最后，在解决MariaDB安装的过程中，还有一个意外的收获，解决了Ubuntu上网易云音乐每次启动都需要重新登录的问题，原因就在“.cache/netease-cloud-music/”目录下有一些文件的属主是root，用“chown -R”命令修改整个目录的属主为自己的用户之后，问题就解决了！</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/03/03/bandwagon-basic/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -388,7 +579,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-24 19:55:26" itemprop="dateModified" datetime="2019-03-24T19:55:26+08:00">2019-03-24</time>
+                <time title="修改时间：2019-03-31 11:03:38" itemprop="dateModified" datetime="2019-03-31T11:03:38+08:00">2019-03-31</time>
               
             
           </span>
@@ -469,6 +660,7 @@
 <img src="/2019/03/03/bandwagon-basic/finalspeed_client.PNG" title="[FinalSpeed客户端配置]">
 <p>&emsp;&emsp;物理宽带的下载速度和上传速度请按照自己实际的网速进行配置。配置完成之后，可以通过本地IP加本地端口的方式，访问服务器IP的加速端口。</p>
 <p>&emsp;&emsp;写在最后，当记录某项操作时，我希望自己能弄清楚背后的原理，无奈之BBR、FinalSpeed和net_speeder三者间，之后net_speeder比较容易理解，理解BBR和FinalSpeed都需要掌握相当的计算机网络知识，自己一时半会没法深入理解，所以先在这里立下一个Flag，后面再补上BBR和FinalSpeed的讲解。在此先感谢为我们创建了这些好用的工具的程序员。</p>
+<p>apt-key adv –recv-keys –keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8<br>add-apt-repository ‘deb [arch=amd64] <a href="http://mirrors.tuna.tsinghua.edu.cn/mariadb/repo/10.3/ubuntu" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/mariadb/repo/10.3/ubuntu</a> bionic main’</p>
 
           
         
@@ -1922,167 +2114,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2017/02/18/glimpse-of-hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Leon">
-      <meta itemprop="description" content="君子励锋芒之剑</br>隐而不发">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YiaYiaO">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/02/18/glimpse-of-hexo/" class="post-title-link" itemprop="url">A Glimpse of Hexo</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-02-18 12:12:00" itemprop="dateCreated datePublished" datetime="2017-02-18T12:12:00+08:00">2017-02-18</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-11-18 12:51:56" itemprop="dateModified" datetime="2018-11-18T12:51:56+08:00">2018-11-18</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>&emsp;&emsp;我是一个喜欢简单的人。之前尝试过Wordpress建站，坚持了一段时间，后来的感觉是Wordpress有点复杂，最不习惯的就是它自带的富文本编辑器，时常花费许多时间调整页面布局，效果却不理想，好不容易调整到马马虎虎，发布上去却发现怎么两篇文章字体格式迥然不同。博客本来是记录内容的，我却为格式耗费了很多时间；再加上想要学习PHP的计划一再打断，自己又无法修改模板中不合心意的地方，慢慢的就放弃了。</p>
-<p>&emsp;&emsp;后来一想，如果能够有一种方法，将markdown文件书写的文本直接发布到博客上，就不会存在格式不一致的问题了，不知道Wordpress有没有这样的插件，因为很久不写博客，也没有费心去google一下。前一阵子阿里云邮件提醒购买的域名快到期了，想到当时挑选域名时耗费的心思，不想就此抛弃，于是又续了三年。然后想到自己域名都买了，不搞个博客实在浪费，再加上感觉自己工作之后，已经没有学生时代过目难忘的记忆力，一些东西自己不做梳理，不做记录，过一段时间也就忘了，如果浑浑噩噩过完这风华正茂的几年，真的是太可惜了。</p>
-<p>&emsp;&emsp;所以，我决定继续写博客。之前申请的国外免费空间已经找不回来了，我也不想再重温Wordpress的建站经历，所以一开始想随便找一个博客算了，像新浪或者博客园这样的，简简单单，不用纠结。但是想到自己平时看博客时，右下角总有些讨厌的广告，想到以后自己的博客也会变成这样，心里有些不情愿。就在网上闲逛时，不经意发现了GitHub Pages这个好东西，只需要简单上传写静态页面，便可以生成博客，简简单单，很和自己的性子。即使是每一个页面都需要自己编辑，也好过自己的博客页面上满是广告，而GitHub Pages还支持了Jekyll这样的框架，不需要在写博客时关注html，何乐而不为呢。</p>
-<p>&emsp;&emsp;“GitHub Pages”，决定就是你了。GitHub Pages用起来很简单，很快就完成了第一个Hello World页面，绑定上自己的域名，自家的博客店，也算是重新开业了。然后开始看Jekyll，这是一个基于Ruby的框架，呵呵，但愿我不用学一遍Ruby。网上学习Jekyll 的同时，看到很多人已经切换到了Hexo，据说支持的主题更多，切换主题的管理插件更容易，渲染的速度也更快。于是顺手打开了Hexo的主页，发现安装部署起来都很简单，既然如此简单，自己何不试一下呢。一试发现果然很简单，配置上基本没有什么困难，遇到的唯一阻碍是deploy之前，github页面上需要添加本机的签名，对于熟悉Git的人，这根本不是问题。</p>
-<p>&emsp;&emsp;不得不说，刚刚一部署，Hexo就让我眼前一亮，从页面上看的确简介大方，编写文章，上传博客都非常方便，而且有了GutHub进行管理，也不用担心自己的博文丢失了。趁热打铁，我将自己的在Ubuntu上配置Vim的经历，写成了一封英文博客上传了上去。用Hexo写的博客，简单大方，也很适合在手机屏幕上阅读，第一篇博客完成！满满的成就感。</p>
-<p>&emsp;&emsp;我会一直将写博客的习惯保持下去，记录日常生活，也记录点滴收获，满足一下自己写作的热情。</p>
-<p>GitHub地址: <a href="https://github.com/yiayiao/Blog" target="_blank" rel="noopener">点我传送</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2131,7 +2162,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2143,12 +2174,22 @@
                 <div class="site-state-item site-state-categories">
                   
                     
+                      <a href="/categories/">
+                    
+                  
+                    
                     
                       
                     
-                    <span class="site-state-item-count">1</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
-                  
+                  </a>
                 </div>
               
 

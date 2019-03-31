@@ -96,27 +96,24 @@
 
 
 
-  <meta name="description" content="Vim is one of the most fantastic editors for coding. Once I have installed the Ubuntu system, the next step will be the installation or configuration of Vim. Good configuration takes much time, but fi">
-<meta name="keywords" content="Installation">
+  <meta name="description" content="在Ubuntu上安装MariaDB的经历，其挫折系数仅次于数年前安装Oracle。然而安装完成之后再回头看，其实也并没有那么复杂，搞出这么多幺蛾子，还是自己因为自己对MySQL和MariaDB一知半解，吃了没文化的亏。 MadiaDB数据库是MySQL数据库的一个非常活跃的分支，为什么要安装MariaDB，因为MySQL被Oracle公司收购之后，更新节奏变慢，而且有被Oracle闭源的风险。所以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Vim Installation on Ubuntu">
-<meta property="og:url" content="http://blog.yiayiao.com/2017/02/12/vim-installation/index.html">
+<meta property="og:title" content="Ubuntu安装使用MariaDB">
+<meta property="og:url" content="http://blog.yiayiao.com/2019/03/31/install-mariadb/index.html">
 <meta property="og:site_name" content="YiaYiaO">
-<meta property="og:description" content="Vim is one of the most fantastic editors for coding. Once I have installed the Ubuntu system, the next step will be the installation or configuration of Vim. Good configuration takes much time, but fi">
+<meta property="og:description" content="在Ubuntu上安装MariaDB的经历，其挫折系数仅次于数年前安装Oracle。然而安装完成之后再回头看，其实也并没有那么复杂，搞出这么多幺蛾子，还是自己因为自己对MySQL和MariaDB一知半解，吃了没文化的亏。 MadiaDB数据库是MySQL数据库的一个非常活跃的分支，为什么要安装MariaDB，因为MySQL被Oracle公司收购之后，更新节奏变慢，而且有被Oracle闭源的风险。所以">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://blog.yiayiao.com/2017/02/12/vim-installation/pyflakes-error.png">
-<meta property="og:updated_time" content="2019-03-03T13:41:20.472Z">
+<meta property="og:updated_time" content="2019-03-31T10:08:53.127Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Vim Installation on Ubuntu">
-<meta name="twitter:description" content="Vim is one of the most fantastic editors for coding. Once I have installed the Ubuntu system, the next step will be the installation or configuration of Vim. Good configuration takes much time, but fi">
-<meta name="twitter:image" content="http://blog.yiayiao.com/2017/02/12/vim-installation/pyflakes-error.png">
+<meta name="twitter:title" content="Ubuntu安装使用MariaDB">
+<meta name="twitter:description" content="在Ubuntu上安装MariaDB的经历，其挫折系数仅次于数年前安装Oracle。然而安装完成之后再回头看，其实也并没有那么复杂，搞出这么多幺蛾子，还是自己因为自己对MySQL和MariaDB一知半解，吃了没文化的亏。 MadiaDB数据库是MySQL数据库的一个非常活跃的分支，为什么要安装MariaDB，因为MySQL被Oracle公司收购之后，更新节奏变慢，而且有被Oracle闭源的风险。所以">
 
 
 
 
 
 
-  <link rel="canonical" href="http://blog.yiayiao.com/2017/02/12/vim-installation/">
+  <link rel="canonical" href="http://blog.yiayiao.com/2019/03/31/install-mariadb/">
 
 
 
@@ -126,7 +123,7 @@
   };
 </script>
 
-  <title>Vim Installation on Ubuntu | YiaYiaO</title>
+  <title>Ubuntu安装使用MariaDB | YiaYiaO</title>
   
 
 
@@ -329,7 +326,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2017/02/12/vim-installation/">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/03/31/install-mariadb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Leon">
@@ -346,7 +343,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Vim Installation on Ubuntu
+          <h1 class="post-title" itemprop="name headline">Ubuntu安装使用MariaDB
 
               
             
@@ -372,28 +369,48 @@
                 
               
 
-              <time title="创建时间：2017-02-12 13:35:21" itemprop="dateCreated datePublished" datetime="2017-02-12T13:35:21+08:00">2017-02-12</time>
+              <time title="创建时间：2019-03-31 11:09:23 / 修改时间：18:08:53" itemprop="dateCreated datePublished" datetime="2019-03-31T11:09:23+08:00">2019-03-31</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-03-03 21:41:20" itemprop="dateModified" datetime="2019-03-03T21:41:20+08:00">2019-03-03</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/Web/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -423,20 +440,23 @@
       
 
       
-        <p>Vim is one of the most fantastic editors for coding. Once I have installed the Ubuntu system, the next step will be the installation or configuration of Vim. Good configuration takes much time, but finally you will find it’s worth to do that. Here I record how I configure my vim, just make a simple record in case that I will configure it again, and may you, my dear reader, like it!</p>
-<h2 id="Wonderful-Guide-from-Github"><a href="#Wonderful-Guide-from-Github" class="headerlink" title="Wonderful Guide from Github"></a>Wonderful Guide from Github</h2><p>Here is a wonderful guide I followed to configure my vim: <a href="https://github.com/ma6174/vim" target="_blank" rel="noopener">ma6174</a><br>Just follow the guide you will get a get a well configed vim, with many useful plug-ins which can help you show the file structure, autocomplete the code, do code checks and more. But when I tried on my computer, there was one shortpoint about this guide, if you want to know it, keep on reading.</p>
-<h2 id="Replace-Pyflakes-with-Flake8"><a href="#Replace-Pyflakes-with-Flake8" class="headerlink" title="Replace Pyflakes with Flake8"></a>Replace Pyflakes with Flake8</h2><p>Once you have followed the guide and finished the installation of vim, you can try this command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim test.py</span><br></pre></td></tr></table></figure>
-<p>If everything is OK and there is no error on you terminal page, congratulations, enjoy your Vim. But during my configuration, I got a error:<img src="/2017/02/12/vim-installation/pyflakes-error.png" title="This is an image"></p>
-<p>When I searched the internet, there was a page written that pyflakes is obsoleting, and flake8 was suggested to replace pyflakes. So I removed the plug-in pyflakes and then installed flake8.</p>
-<ul>
-<li><h4 id="How-to-Remove-Pyflakes"><a href="#How-to-Remove-Pyflakes" class="headerlink" title="How to Remove Pyflakes:"></a>How to Remove Pyflakes:</h4></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm ~/.vim/ftplugin/python/pyflakes.vim</span><br></pre></td></tr></table></figure>
-<ul>
-<li><h4 id="How-to-Install-Flake8"><a href="#How-to-Install-Flake8" class="headerlink" title="How to Install Flake8:"></a>How to Install Flake8:</h4></li>
-</ul>
-<p>Just give a link here, follow this guide and you can manage it yourself: <a href="http://blog.csdn.net/roy9494/article/details/17439069" target="_blank" rel="noopener">flake8</a></p>
+        <p>在Ubuntu上安装MariaDB的经历，其挫折系数仅次于数年前安装Oracle。然而安装完成之后再回头看，其实也并没有那么复杂，搞出这么多幺蛾子，还是自己因为自己对MySQL和MariaDB一知半解，吃了没文化的亏。</p>
+<p>MadiaDB数据库是MySQL数据库的一个非常活跃的分支，为什么要安装MariaDB，因为MySQL被Oracle公司收购之后，更新节奏变慢，而且有被Oracle闭源的风险。所以，是时候跟着MySQL之父Michael Widenius一起拥抱MariaDB了。</p>
+<p>我的Ubuntu系统为Ubuntu 18.04 LTS，安装的MariaDB版本为<strong>10.3</strong>版本，下面给出安装命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#安装依赖包</span><br><span class="line">apt install software-properties-common -y</span><br><span class="line">#添加密钥</span><br><span class="line">apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8</span><br><span class="line">#添加PPA源</span><br><span class="line">add-apt-repository &apos;deb [arch=amd64] http://mirrors.tuna.tsinghua.edu.cn/mariadb/repo/10.3/ubuntu bionic main&apos;</span><br><span class="line">#安装mariadb-server</span><br><span class="line">apt update</span><br><span class="line">apt install mariadb-server -y</span><br></pre></td></tr></table></figure>
+<p><em>如果你想要安装10.2, 10.1, 5.5等其他版本的MariaDB，请将命令中的10.3替换为对应的版本号</em></p>
+<p>怎么样，是不是很简单，那我怎么就掉进了坑里了？怎么掉进去的我也不知道，当我重启电脑之后，发现MariaDB数据库没起来。我尝试用“systemctl start mysql”命令启动MariaDB，启动了一段时间之后启动失败了，根据提示使用“journalctl -xe”查看错误日志，发现日志中如下的错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kernel: [ 2336.792423] audit: type=1400 audit(1470265086.730:518): apparmor=&quot;DENIED&quot; operation=&quot;sendmsg&quot; info=&quot;Failed name lookup - disconnected path&quot; error=-13 profile=&quot;/usr/sbin/mysqld&quot; name=&quot;run/systemd/notify&quot; pid=11850 comm=&quot;mysqld&quot; requested_mask=&quot;w&quot; denied_mask=&quot;w&quot; fsuid=117 ouid=0</span><br></pre></td></tr></table></figure>
+<p>从日志里面看，MariaDB启动失败和apparmor有关，apparmor是什么东西，遇到这个问题之前我不懂，因为这个问题我简单了解了一下，apparmor安全策略用于定义个别程序可以访问的系统资源以及各自的特权，简单理解一下，是一个做安全配置的东西。当我根据网上搜来的一些指导去编辑MySQL的安全配置文件“/etc/apparmor.d/usr.sbin.mysqld”时，我注意到文件内容是空的，仅有如下一段注释说明：</p>
+<blockquote>
+<p># <b>This file is intentionally empty to disable apparmor by default</b> for newer<br># versions of MariaDB, while providing seamless upgrade from older versions<br># and from mysql, where apparmor is used.<br>#<br># By default, <b>we do not want to have any apparmor profile for the MariaDB</b><br># server. It does not provide much useful functionality/security, and causes<br># several problems for users who often are not even aware that apparmor<br># exists and runs on their system.<br>#<br># Users can modify and maintain their own profile, and in this case it will<br># be used.<br>#<br># When upgrading from previous version, users who modified the profile<br># will be prompted to keep or discard it, while for default installs<br># we will automatically disable the profile.</p>
+</blockquote>
+<p>注意上文中被我加粗的内容，MariaDB默认是关闭了apparmor策略的，那为什么还是被apparmor搞得启都启不来了，一脸懵逼。随后我继续尝试搜索解决方案，按照网上的一些教程对apparmor配置文件进行了配置，取得了一些进展，不过仅限于日志中的错误信息发生了变化。</p>
+<p>最后还是在<a href="https://stackoverflow.com/questions/22473830/docker-and-mysql-libz-so-1-cannot-open-shared-object-file-permission-denied" title="solve" target="_blank" rel="noopener">stackoverflow</a>中找到了解决方法，解决方法还是关闭MariaDB的apparmor配置，使用下面的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#Type this on your host terminal</span><br><span class="line">sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/</span><br><span class="line">sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld</span><br></pre></td></tr></table></figure>
+<p>在博客园的一篇博客中，找到了对上述操作的解释，/etc/apparmor.d/disable目录可以和apparmor_parser -R选项一起使用以禁用一个配置文件，这里给出<a href="http://www.cnblogs.com/popsuper1982/p/3818116.html" title="solve" target="_blank" rel="noopener">链接</a>。</p>
+<p>写这篇博客时，我尝试将它写得悲壮一点，像读者传递一下解决问题过程中的艰辛，但是写博客的过程中，我渐渐放弃了这个想法，还是写得朴实一点，把事情写清楚最重要。对于我们大多数程序猿来说，解决问题就是我们的日常，每当解决了一个问题，就积累了一些经验，所以面对问题，我们应该抱有积极的心态。在解决这个问题的过程中，我将MariaDB翻来覆去安装了很多遍，配置文件改了又改，在MySQL的配置，以及日志的查看等方面有学到了一些知识。</p>
+<p>最后，在解决MariaDB安装的过程中，还有一个意外的收获，解决了Ubuntu上网易云音乐每次启动都需要重新登录的问题，原因就在“.cache/netease-cloud-music/”目录下有一些文件的属主是root，用“chown -R”命令修改整个目录的属主为自己的用户之后，问题就解决了！</p>
 
       
     </div>
@@ -458,12 +478,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Installation/" rel="tag"># Installation</a>
-          
-        </div>
-      
 
       
       
@@ -473,15 +487,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/03/03/bandwagon-basic/" rel="next" title="搬瓦工服务器常见的问题">
+                <i class="fa fa-chevron-left"></i> 搬瓦工服务器常见的问题
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/18/glimpse-of-hexo/" rel="prev" title="A Glimpse of Hexo">
-                A Glimpse of Hexo <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -525,17 +539,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -651,23 +656,6 @@
         </div>
       </div>
 
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Wonderful-Guide-from-Github"><span class="nav-number">1.</span> <span class="nav-text">Wonderful Guide from Github</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Replace-Pyflakes-with-Flake8"><span class="nav-number">2.</span> <span class="nav-text">Replace Pyflakes with Flake8</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#How-to-Remove-Pyflakes"><span class="nav-number">2.0.1.</span> <span class="nav-text">How to Remove Pyflakes:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#How-to-Install-Flake8"><span class="nav-number">2.0.2.</span> <span class="nav-text">How to Install Flake8:</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
       
 
       
