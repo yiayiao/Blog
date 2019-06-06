@@ -39,15 +39,12 @@ tags:
 |----|----|----|
 |hexo generate | hexo g | 生成静态文件 |
 |hexo generate -\-deploy | hexo g -d | 文件生成后立即部署网站 | 
+|hexo generate -\-watch | hexo g -w | 监视文件变动并立即重新生成静态HTML |
 |hexo deploy | hexo d | 部署网站 |
 |hexo deploy -\-generate | hexo d -g | 部署网站，官网上说和hexo generate -\-deploy相同 | 
 
-&emsp;&emsp;你看到上面的几行命令是否也有这样的困惑，“hexo d”命令与“hexo g -d”、“hexo d -g”命令有什么区别，我自己实验后感觉是，没有区别！执行“hexo d”命令，从日志看Hexo就会先生成静态文件，与另外两条命令是一致的。从自己基础阶段常用的Hexo操作来看，“hexo g”这个命令都显得很鸡肋。
+&emsp;&emsp;你看到上面的几行命令是否也有这样的困惑，“hexo d”命令与“hexo g -d”、“hexo d -g”命令有什么区别，我自己实验后感觉是，没有区别！执行“hexo d”命令，从日志看Hexo就会先生成静态文件，与另外两条命令是一致的。从自己目前常用的Hexo操作来看，“hexo g”这个命令都显得很鸡肋。
 &emsp;&emsp;掌握“hexo s”命令，本地博文的任何修改都能实时更新并查看效果，“hexo g -w”和“hexo s -s”命令一起也有与“hexo s”命令一样的效果，却更加繁琐。而掌握“hexo d”一条命令，就能完成自己博文的上传，无需事先执行“hexo g”命令。为了应对可能出现的未知错误，可以再记一条“hexo clean”，在“hexo d”命令前执行。
 
 ### 一些常用的配置
 
-不管了，就这样吧，这样打字的时候好用一点，自己的输入法可以快一点点，windows自己的输入法用起来还是怪怪的
-
-试试搜狗输入法，在这里还是不行啊
-出来的位置明显的不对
