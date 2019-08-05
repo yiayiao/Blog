@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="谈一下自己学习subprocess模块和自己实践的过程中，遇到的一些问题与思考体会。先给出：官网链接 首先从名字说起，模块名称中包含process，就说明了其与线程的联系，官网中对于这个模型的介绍可谓相当的精辟，建议在学习这个模块的用法前多阅读几遍加深理解：  The subprocess module allows you to spawn new processes, connect to t">
+<meta name="keywords" content="Code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 模块 subprocess">
+<meta property="og:url" content="http://blog.yiayiao.com/2019/07/25/python-module-subprocess/index.html">
+<meta property="og:site_name" content="YiaYiaO">
+<meta property="og:description" content="谈一下自己学习subprocess模块和自己实践的过程中，遇到的一些问题与思考体会。先给出：官网链接 首先从名字说起，模块名称中包含process，就说明了其与线程的联系，官网中对于这个模型的介绍可谓相当的精辟，建议在学习这个模块的用法前多阅读几遍加深理解：  The subprocess module allows you to spawn new processes, connect to t">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.yiayiao.com/2019/07/25/python-module-subprocess/screenshot-01.png">
+<meta property="og:updated_time" content="2019-07-27T14:23:31.045Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python 模块 subprocess">
+<meta name="twitter:description" content="谈一下自己学习subprocess模块和自己实践的过程中，遇到的一些问题与思考体会。先给出：官网链接 首先从名字说起，模块名称中包含process，就说明了其与线程的联系，官网中对于这个模型的介绍可谓相当的精辟，建议在学习这个模块的用法前多阅读几遍加深理解：  The subprocess module allows you to spawn new processes, connect to t">
+<meta name="twitter:image" content="http://blog.yiayiao.com/2019/07/25/python-module-subprocess/screenshot-01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.yiayiao.com/2019/07/25/python-module-subprocess/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Python 模块 subprocess | YiaYiaO</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YiaYiaO</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">唐老鸭有一个农场，咿啊咿啊噢</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/07/25/python-module-subprocess/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leon">
+      <meta itemprop="description" content="君子励锋芒之剑</br>隐而不发">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YiaYiaO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python 模块 subprocess
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-25 20:21:48" itemprop="dateCreated datePublished" datetime="2019-07-25T20:21:48+08:00">2019-07-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-27 22:23:31" itemprop="dateModified" datetime="2019-07-27T22:23:31+08:00">2019-07-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/module/" itemprop="url" rel="index"><span itemprop="name">module</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>谈一下自己学习subprocess模块和自己实践的过程中，遇到的一些问题与思考体会。先给出：<a href="https://docs.python.org/3/library/subprocess.html#subprocess.Popen.communicate" title="link" target="_blank" rel="noopener">官网链接</a></p>
+<p>首先从名字说起，模块名称中包含process，就说明了其与线程的联系，官网中对于这个模型的介绍可谓相当的精辟，建议在学习这个模块的用法前多阅读几遍加深理解：</p>
+<blockquote>
+<p>The subprocess module allows you to spawn new processes, connect to their input/output/error pipes, and obtain their return codes. This module intends to replace several older modules and functions.</p>
+</blockquote>
+<p>然后，关注到这个模块最主要的两个函数是 subprocess.run() 和 subprocess.Popen()，它们有什么差别？我从官网粗略看了一下，没太理解为什么要同时设计 run 和 Popen；但是从官网一些实现的描述，我注意到 run 内部封装了一个 Popen。其实再仔细看一下，就可以发现最直接的一点差别，run 是一个函数，Popen 是一个类。再进一步，run 函数返回的对象类型是 subprocess.CompletedProcess，直白一点，run 函数直接获取到了子进程执行的结果；相比之下，Popen 类允许通过 stdin， 与子进程进行交互。</p>
+<h4 id="Part-1"><a href="#Part-1" class="headerlink" title="Part 1."></a>Part 1.</h4><p>关于 subprocess.run() 函数，我想用一个简单示例结束战斗，python 用起来本来就很简单，更为丰富的使用方法可以参考官网。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line">ret = subprocess.run([<span class="string">"ls"</span>, <span class="string">"-lrt"</span>], stdout=subprocess.PIPE, stderr=subprocess.PIPE)</span><br><span class="line">print(ret.returncode)</span><br><span class="line">print(ret.stdout.decode())</span><br><span class="line">print(ret.stderr.decode())</span><br></pre></td></tr></table></figure>
+<h4 id="Part-2"><a href="#Part-2" class="headerlink" title="Part 2."></a>Part 2.</h4><p>对于 subprocess.Popen 类，它面向的整个与子进程的交互过程，问题来了，交互过程何时开始，何时结束？测试如下的代码的执行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">proc = subprocess.Popen([<span class="string">"pwd"</span>], stdout=subprocess.PIPE)</span><br><span class="line">time.sleep(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p>代码第4行 time.sleep(10) 让程序在 Popen 执行之后 sleep 10秒，在程序启动的10秒内和程序执行结束后，两次在Ubuntu终端下执行 ”ps -ef | grep pwd” 命令，可以看到如下执行结果：</p>
+<img src="/2019/07/25/python-module-subprocess/screenshot-01.png" title="[pwd命令的执行结果]">
+<p>从上文的执行结果分析，程序第3行 subprocess.Popen 启动了pwd子进程，pwd子进程很快执行结束，而因为主进程没有执行 wait 调用，子进程变成了 defunct 僵尸进程，直到整个测试程序执行结束。为了避免子进程变成 defunct 僵尸进程，在 Popen 执行之后，需要调用 proc.wait(或者proc.communicate)。</p>
+<p>我认为 proc.communicate 比 proc.wait 更值得推荐，原因我关注到了这么两点：首先在子进程输出到PIPE，并且输出太多超过了系统 buffer 空间大小时，wait 函数将会阻塞，而 communicate 函数没有类似的问题（具体的原因可能需要借助源码的学习了）；其次 proc.communicate 直接返回子进程的 stdout 和 stderror，在这个过程中 proc.communicate 主动对 stdout 和 stderror 的 PIPE 进行了 close，而 proc.wait 函数需要你主动进行 close 。</p>
+<h4 id="Part-3"><a href="#Part-3" class="headerlink" title="Part 3."></a>Part 3.</h4><p>上面一节我们还是没有提到与子进程进行交互，在使用 Popen 时，我们可以通过子进程的标准输入输出，与子进程进行交互，示例如下：</p>
+<figure class="highlight python"><figcaption><span>test.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    data = input().upper()</span><br><span class="line">    print(data)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><figcaption><span>main.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line">proc = subprocess.Popen([<span class="string">"python3"</span>, <span class="string">"test.py"</span>], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        data = input(<span class="string">'please input &gt;'</span>)</span><br><span class="line">        proc.stdin.write(data.encode())   <span class="comment"># 写入字节</span></span><br><span class="line">        proc.stdin.write(<span class="string">b'\n'</span>)           <span class="comment"># 写入换行符，子进程每次读取一行</span></span><br><span class="line">        proc.stdin.flush()                <span class="comment"># 需要flush，子进程才能立即接收</span></span><br><span class="line">        line = proc.stdout.readline()</span><br><span class="line">        print(line)</span><br><span class="line"><span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">    print(<span class="string">"user closed..."</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    proc.kill()</span><br><span class="line">    proc.wait()</span><br><span class="line">    proc.stdin.close()</span><br><span class="line">    proc.stdout.close()</span><br><span class="line">    proc.stderr.close()</span><br></pre></td></tr></table></figure>
+<p>以上的 main.py，创建子进程调用 test.py，实现了将输入的字符转换为大写之后再输出的功能，留意代码中的注释部分，与子进程进行交互时，需要写入换行符，并且刷新PIPE。</p>
+<p>以上的进程间交互有一个问题，如果子进程的输出不止一行怎么办，注意千万不要将 proc.stdout.readline() 放到一个循环里面，当子进程已经完成本轮输出之后，主进程还在读，便会形成阻塞。这个问题怎么解决呢？老实说我也不知道，查找了一些材料也没有找到破解的方法，或许主进程知道子进程每次交互的输出大小，或者子进程能正常退出是唯一的解决方法。因为这个问题不知道怎么解，所以应用的场景也就受到了限制，应用在子进程的执行结果较为确定的场景应该还是不错的，比如对子进程进行工具测试。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Code/" rel="tag"># Code</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/14/python-learning-04/" rel="next" title="Python学习总结04——socket">
+                <i class="fa fa-chevron-left"></i> Python学习总结04——socket
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/01/python-learning-02/" rel="prev" title="python-learning-02">
+                python-learning-02 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Leon">
+            
+              <p class="site-author-name" itemprop="name">Leon</p>
+              <div class="site-description motion-element" itemprop="description">君子励锋芒之剑<br>隐而不发</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/yiayiao" title="GitHub &rarr; https://github.com/yiayiao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:yiayiao@gmail.com" title="E-Mail &rarr; mailto:yiayiao@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Part-1"><span class="nav-number">1.</span> <span class="nav-text">Part 1.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Part-2"><span class="nav-number">2.</span> <span class="nav-text">Part 2.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Part-3"><span class="nav-number">3.</span> <span class="nav-text">Part 3.</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

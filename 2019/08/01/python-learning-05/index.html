@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="了解进程与线程想要了解线程，就绕不开进程。 什么是进程 An executing instance of a program is called a process.Each process provides the resources needed to execute a program. A process has a virtual address space, executable co">
+<meta name="keywords" content="Code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python学习总结05——threading">
+<meta property="og:url" content="http://blog.yiayiao.com/2019/08/01/python-learning-05/index.html">
+<meta property="og:site_name" content="YiaYiaO">
+<meta property="og:description" content="了解进程与线程想要了解线程，就绕不开进程。 什么是进程 An executing instance of a program is called a process.Each process provides the resources needed to execute a program. A process has a virtual address space, executable co">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.yiayiao.com/2019/08/01/python-learning-05/screenshot_01.png">
+<meta property="og:image" content="http://blog.yiayiao.com/2019/08/01/python-learning-05/screenshot_02.png">
+<meta property="og:updated_time" content="2019-08-04T12:46:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python学习总结05——threading">
+<meta name="twitter:description" content="了解进程与线程想要了解线程，就绕不开进程。 什么是进程 An executing instance of a program is called a process.Each process provides the resources needed to execute a program. A process has a virtual address space, executable co">
+<meta name="twitter:image" content="http://blog.yiayiao.com/2019/08/01/python-learning-05/screenshot_01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.yiayiao.com/2019/08/01/python-learning-05/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Python学习总结05——threading | YiaYiaO</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YiaYiaO</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">唐老鸭有一个农场，咿啊咿啊噢</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/08/01/python-learning-05/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leon">
+      <meta itemprop="description" content="君子励锋芒之剑</br>隐而不发">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YiaYiaO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python学习总结05——threading
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-01 08:08:32" itemprop="dateCreated datePublished" datetime="2019-08-01T08:08:32+08:00">2019-08-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-04 20:46:15" itemprop="dateModified" datetime="2019-08-04T20:46:15+08:00">2019-08-04</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/Basic/" itemprop="url" rel="index"><span itemprop="name">Basic</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="了解进程与线程"><a href="#了解进程与线程" class="headerlink" title="了解进程与线程"></a>了解进程与线程</h3><p>想要了解线程，就绕不开进程。</p>
+<h4 id="什么是进程"><a href="#什么是进程" class="headerlink" title="什么是进程"></a>什么是进程</h4><blockquote>
+<p>An executing instance of a program is called a process.<br>Each process provides the resources needed to execute a program. A process has a virtual address space, executable code, open handles to system objects, a security context, a unique process identifier, environment variables, a priority class, minimum and maximum working set sizes, and at least one thread of execution. Each process is started with a single thread, often called the primary thread, but can create additional threads from any of its threads.</p>
+</blockquote>
+<p>翻译：一个正在执行的程序的实例被称之为进程。每一个进程都提供了程序允许所需要的资源，一个进程包含该一个虚拟地址空间，可执行的代码，连接系统其他对象的handle，一个安全上下文，一个独立的进程编号，环境变量，优先级（priority class），最大和最小的工作空间，以及至少一个正在执行的线程。每一个进程启动时都伴随了一个线程，通常称之为主线程，进程中的每一个线程都可以再创建其他的线程。</p>
+<h4 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h4><blockquote>
+<p>A thread is an execution context, which is all the information a CPU needs to execute a stream of instructions.</p>
+</blockquote>
+<p>翻译：线程是一个执行的上下文，包含了CPU需要执行的一系列指令的所有信息。</p>
+<p><em>个人翻译未必准确，建议参考英文</em></p>
+<p>以上是我能够查到的，对进程和线程的比较官方比较权威比较可信的解释，这句话我琢磨了比较久，用了三个比较，因为计算机到底是一门人造学科，很多概念在大家定义和实践它时，在不同人之间有所差别。以上是一个比较通用，大家比较接收的定义，写Python时用到的进程和线程完全符号以上定义，而对Linux系统来说有人就有了其他的看法，比如“Linux没有线程”，在Windows系统上讨论以上的进程和线程的定义就又不一样了。</p>
+<p>从网上看到了一篇讲Linux的进程与线程的通俗易懂的好文，链接请点<a href="https://my.oschina.net/cnyinlinux/blog/422207" title="link" target="_blank" rel="noopener">这里</a>，我认为Linux是有线程的，部分观点认为Linux没有线程，因为创建进程和线程都调用系统底层的clone接口，只是参数不同。但是我看到这一点参数的不同给创建的进程与线程带来了实质的差别——是否与父进程共享空间。另外链接中的博文里面也提到创建线程时并不采用clone系统调用，而是采用线程库函数。常用线程库有Linux-Native线程库和POSIX线程库。其中应用最为广泛的是POSIX线程库。因此读者在多线程程序中看到的是pthread_create而非clone。</p>
+<p><em>我对Linux操作系统实现知之甚少，很多浅见都是网上浏览所得，期待以后能够系统性的学习</em></p>
+<p>脱离开具体的场景来讨论问题的经常是没有意义的，创造一个概念在生搬硬套现实的场景同样容易产生谬误。关于进程和线程，还有一个一句话定义：线程是最小的执行单位，进程是最小的分配资源单位。这句话固然精辟，高度概括，但我认为它还是一个总结，是加深理解的一个维度，而不是不可反驳真理。</p>
+<h3 id="Python线程"><a href="#Python线程" class="headerlink" title="Python线程"></a>Python线程</h3><p>先划一下重点，Python真的很简单，线程相关的知识点不外乎下面几个，如果都能想起来，下文就不用继续看了。</p>
+<ol>
+<li>Python创建线程有两种方式，一种是创建Thread对象，传入要运行的方法；另一种是继承Thread类，重写其中的run方法。</li>
+<li>通过将子线程设置为守护线程，setDeaon(True)，可以让主线程结束时子线程也同时结束。</li>
+<li>通过join方法让父线程等待子线程执行结束，注意如果同时创建了多个子线程，这些子线程需要并行的执行，需要在这些子线程的start方法都已经被调用了之后，再调用每个子线程的join函数，否者这些子线程间的执行将变为串行。</li>
+<li>线程锁，Lock和Rlock，Lock为指令锁，不可重入，RLock为可重入锁</li>
+<li>线程间交互，Condition和Event</li>
+<li>队列queue</li>
+</ol>
+<p>以下分别讲述给个知识点，以代码为主：</p>
+<h4 id="线程创建："><a href="#线程创建：" class="headerlink" title="线程创建："></a>线程创建：</h4><ol>
+<li>通过创建Thread对象创建子线程</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(n)</span>:</span></span><br><span class="line">    print(<span class="string">"task"</span>, n)</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">t1 = threading.Thread(target=run, args=(<span class="string">'t1'</span>,)) <span class="comment"># 传参为元组，逗号为必须</span></span><br><span class="line">t1.start()</span><br><span class="line">t2 = threading.Thread(target=run, args=(<span class="string">'t2'</span>,))</span><br><span class="line">t2.start()</span><br><span class="line">print(threading.active_count()) <span class="comment"># 结果为3，1个主线程，2个子线程</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>通过继承Thread类并且重写run方法创建子线程</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread</span><span class="params">(threading.Thread)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, n, name)</span>:</span></span><br><span class="line">        super(MyThread, self).__init__()</span><br><span class="line">        self.n = n</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        print(<span class="string">"running task "</span>, self.n)</span><br><span class="line">        time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">print(threading.current_thread()) <span class="comment"># 打印当前线程名称， MainThread</span></span><br><span class="line">t1 = MyThread(<span class="number">1</span>, <span class="string">'线程1'</span>)</span><br><span class="line">t2 = MyThread(<span class="number">2</span>, <span class="string">'线程2'</span>)</span><br><span class="line">print(threading.active_count()) <span class="comment"># 打印结果为1，1个主线程</span></span><br><span class="line">t1.start()</span><br><span class="line">t2.start()</span><br><span class="line">print(threading.active_count()) <span class="comment"># 打印结果为3，1个主线程，2个子线程</span></span><br></pre></td></tr></table></figure>
+<h4 id="setDaemon方法和join方法"><a href="#setDaemon方法和join方法" class="headerlink" title="setDaemon方法和join方法"></a>setDaemon方法和join方法</h4><p>以下的一段程序来自网络（<a href="https://www.cnblogs.com/alex3714/articles/5230609.html" title="link" target="_blank" rel="noopener">链接</a>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(n)</span>:</span></span><br><span class="line">    print(<span class="string">'--running--'</span>, n)</span><br><span class="line">    time.sleep(<span class="number">2</span>)   <span class="comment"># 尝试修改此处的sleep时长，看程序执行结果有什么影响</span></span><br><span class="line">    print(<span class="string">'--done--'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">        t = threading.Thread(target=run, args=[i, ])</span><br><span class="line">        print(<span class="string">'starting thread'</span>, t.getName())</span><br><span class="line">        t.start()</span><br><span class="line">        t.join(timeout=<span class="number">3</span>)  <span class="comment"># 尝试修改此处的join时长，看程序执行结果有什么影响</span></span><br><span class="line"></span><br><span class="line">m = threading.Thread(target=main, args=[])</span><br><span class="line">m.setDaemon(<span class="keyword">True</span>)  <span class="comment"># 将此处的setDaemon(True)去掉，程序执行结果有什么影响</span></span><br><span class="line">m.start()</span><br><span class="line">m.join(timeout=<span class="number">5</span>)</span><br><span class="line">print(<span class="string">"---main thread done----"</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果如下：<br><img src="/2019/08/01/python-learning-05/screenshot_01.png" title="[执行结果]"></p>
+<p>可以看到，1.因为第14行join的存在，Thread-2、Thread-3与Thread-4这些子线程之间变成了串行执行；2.因为17行的m.setDaemon(True),当主线程退出后，变量m引用的线程立即退出，线程Thread-4也立即退出。Thread-4的立即退出，说明对于Thread-4而言，Deamon也是True。</p>
+<p>修改第6行的sleep时长为3，修改第14行的timeout时长为2，执行程序结果如下：<br><img src="/2019/08/01/python-learning-05/screenshot_02.png" title="[执行结果]"></p>
+<p>可以看到，因为join等待的时长小于函数执行的时长，所以没有等Thread-2执行结束，Thread-3就开始执行了。尝试在13行插入t.setDaemon(False)，又有不同的执行结果，可以看到当Thread-2、Thread-3与Thread-4这些子线程设置了Daemon为False，它们的父线程m需要等到它们都执行结束了才会退出，结果不在这里贴出来了，请自行尝试。</p>
+<h4 id="Lock和Rlock"><a href="#Lock和Rlock" class="headerlink" title="Lock和Rlock"></a>Lock和Rlock</h4><p>Python线程锁，网上的示例很多，这里只给出一个示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">global</span> num</span><br><span class="line">    <span class="comment"># lock.acquire() # 注释掉锁之后，最末行print的结果小于100</span></span><br><span class="line">    tmp = num + <span class="number">1</span></span><br><span class="line">    print(tmp)       <span class="comment"># 这里需要做些什么，否则很难复现</span></span><br><span class="line">    num = tmp</span><br><span class="line">    <span class="comment"># lock.release()</span></span><br><span class="line"></span><br><span class="line">num = <span class="number">0</span></span><br><span class="line">lock = threading.Lock()</span><br><span class="line"></span><br><span class="line">threads = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">    t1 = threading.Thread(target=run, args=())</span><br><span class="line">    t1.start()</span><br><span class="line">    threads.append(t1)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> threads:</span><br><span class="line">    t.join()</span><br><span class="line"></span><br><span class="line">print(num)</span><br></pre></td></tr></table></figure>
+<h4 id="Condition和Event"><a href="#Condition和Event" class="headerlink" title="Condition和Event"></a>Condition和Event</h4><p>线程间同步，对应场景类似两个人同时在干活，B需要在A完成特定的工序之后，才能继续后面的工作，B怎么知道A已经完成呢？也无外乎两种方式，第一种是A做完了通知B，期间B一直在休息区坐着；另一种是B隔一会就过来看一下，这种方式下A已完成工作这个信号需要时确切无疑的，当B过来看的时候，A不能表示我马上就好，或者还有5分钟就好，而应该明确告诉B我已经好了或者我还没好。对应的，Condition的方式类似A结束了通知B，期间B在休息室里；Event的方式就类似B一直在边上看着。</p>
+<p>Condition的示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">con = threading.Condition()</span><br><span class="line">num = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Producer</span><span class="params">(threading.Thread)</span>:</span> <span class="comment"># 生产者</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">global</span> num</span><br><span class="line">        con.acquire()         <span class="comment"># 锁定线程</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            print(<span class="string">"开始添加！！！"</span>)</span><br><span class="line">            num += <span class="number">1</span></span><br><span class="line">            print(<span class="string">"火锅里面鱼丸个数：%s"</span> % str(num))</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">if</span> num &gt;= <span class="number">5</span>:</span><br><span class="line">                print(<span class="string">"火锅里面里面鱼丸数量已经到达5个，无法添加了！"</span>)</span><br><span class="line">                con.notify()  <span class="comment"># 告诉休息区的小伙伴开吃</span></span><br><span class="line">                con.wait()    <span class="comment"># 自己进去休息区</span></span><br><span class="line">        con.release()         <span class="comment"># 释放锁</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumers</span><span class="params">(threading.Thread)</span>:</span> <span class="comment"># 消费者</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        con.acquire()</span><br><span class="line">        <span class="keyword">global</span> num</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            print(<span class="string">"开始吃啦！！！"</span>)</span><br><span class="line">            num -= <span class="number">1</span></span><br><span class="line">            print(<span class="string">"火锅里面剩余鱼丸数量：%s"</span> %str(num))</span><br><span class="line">            time.sleep(<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">if</span> num &lt;= <span class="number">0</span>:</span><br><span class="line">                print(<span class="string">"锅底没货了，赶紧加鱼丸吧！"</span>)</span><br><span class="line">                con.notify()  <span class="comment"># 告诉休息区的小伙伴开始生产</span></span><br><span class="line">                con.wait()    <span class="comment"># 自己进入休息区等待</span></span><br><span class="line">        con.release()</span><br><span class="line"></span><br><span class="line">p = Producer()</span><br><span class="line">c = Consumers()</span><br><span class="line">p.start()</span><br><span class="line">c.start()</span><br></pre></td></tr></table></figure>
+<p>代码示例转载自网上，链接：<a href="https://www.cnblogs.com/alex3714/articles/5230609.html" title="link" target="_blank" rel="noopener">上海-悠悠</a>。</p>
+<p>以上是一个简单的生产者消费者示例，首先我们注意到13行和31行con.acquire()，可以动手试一下把它注释掉会怎么样，con.acquire()和con.release()的组合可以采用with语句进行替换，代码会更加简洁。然后，notify和wait的顺序不能换，不能干完活不通知对方一声自己就进入等待区了，这样会形成阻塞；但是如果将以上代码21行和22行的notify和wait的顺序交换，程序还是能正常执行，这是因为锁的原因，可以自己尝试一下，思考为什么会这样。</p>
+<p>然后试想一下我们能否通过线程锁实现该模型，让两个线程竞争一把锁，谁拿到锁谁工作，工作完了释放锁？这样是可行的，但是需要加一些手段，为此我写了下面一段代码。关键就在于代码的第22行和第40行，当前获取了锁的进程工作完毕之后，需要sleep一下再竞争锁，否则很可能自己刚刚释放掉锁，又被自己拿到了，那整个流程就自己一个人在干活了，没别人什么事了。显然每次都sleep一下显得很low，所以设计出condition是有道理的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">lock = threading.Lock()</span><br><span class="line">num = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Producer</span><span class="params">(threading.Thread)</span>:</span> <span class="comment"># 生产者</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">global</span> num</span><br><span class="line">        lock.acquire()  <span class="comment"># 锁定线程</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            print(<span class="string">"开始添加！！！"</span>)</span><br><span class="line">            num += <span class="number">1</span></span><br><span class="line">            print(<span class="string">"火锅里面鱼丸个数：%s"</span> % str(num))</span><br><span class="line">            time.sleep(<span class="number">0.5</span>)</span><br><span class="line">            <span class="keyword">if</span> num &gt;= <span class="number">5</span>:</span><br><span class="line">                print(<span class="string">"火锅里面里面鱼丸数量已经到达5个，无法添加了！"</span>)</span><br><span class="line">                lock.release()         <span class="comment"># 释放锁</span></span><br><span class="line">                time.sleep(<span class="number">2</span>)</span><br><span class="line">                lock.acquire()  <span class="comment"># 锁定线程</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumers</span><span class="params">(threading.Thread)</span>:</span> <span class="comment"># 消费者</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">global</span> num</span><br><span class="line">        lock.acquire()  <span class="comment"># 锁定线程</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            print(<span class="string">"开始吃啦！！！"</span>)</span><br><span class="line">            num -= <span class="number">1</span></span><br><span class="line">            print(<span class="string">"火锅里面剩余鱼丸数量：%s"</span> %str(num))</span><br><span class="line">            time.sleep(<span class="number">0.5</span>)</span><br><span class="line">            <span class="keyword">if</span> num &lt;= <span class="number">0</span>:</span><br><span class="line">                print(<span class="string">"锅底没货了，赶紧加鱼丸吧！"</span>)</span><br><span class="line">                lock.release()</span><br><span class="line">                time.sleep(<span class="number">2</span>)</span><br><span class="line">                lock.acquire()  <span class="comment"># 锁定线程</span></span><br><span class="line"></span><br><span class="line">p = Producer()</span><br><span class="line">c = Consumers()</span><br><span class="line">p.start()</span><br><span class="line">c.start()</span><br></pre></td></tr></table></figure>
+<p>至于Event，不得不再提一下python很简单，还是直接看示例吧，来自网络：<a href="https://www.cnblogs.com/alex3714/articles/5230609.html" title="link" target="_blank" rel="noopener">金角大王Alex-Python之路,Day9, 进程、线程、协程篇</a>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> threading,time</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">light</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> event.isSet():</span><br><span class="line">        event.set() <span class="comment">#wait就不阻塞 #绿灯状态</span></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">if</span> count &lt; <span class="number">10</span>:</span><br><span class="line">            print(<span class="string">'\033[42;1m--green light on---\033[0m'</span>)</span><br><span class="line">        <span class="keyword">elif</span> count &lt;<span class="number">13</span>:</span><br><span class="line">            print(<span class="string">'\033[43;1m--yellow light on---\033[0m'</span>)</span><br><span class="line">        <span class="keyword">elif</span> count &lt;<span class="number">20</span>:</span><br><span class="line">            <span class="keyword">if</span> event.isSet():</span><br><span class="line">                event.clear()</span><br><span class="line">            print(<span class="string">'\033[41;1m--red light on---\033[0m'</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            count = <span class="number">0</span></span><br><span class="line">            event.set() <span class="comment">#打开绿灯</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        count +=<span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">car</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        time.sleep(random.randrange(<span class="number">10</span>))</span><br><span class="line">        <span class="keyword">if</span>  event.isSet(): <span class="comment">#绿灯</span></span><br><span class="line">            print(<span class="string">"car [%s] is running.."</span> % n)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"car [%s] is waiting for the red light.."</span> %n)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    event = threading.Event()</span><br><span class="line">    Light = threading.Thread(target=light)</span><br><span class="line">    Light.start()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">        t = threading.Thread(target=car,args=(i,))</span><br><span class="line">        t.start()</span><br></pre></td></tr></table></figure>
+<h4 id="队列queue"><a href="#队列queue" class="headerlink" title="队列queue"></a>队列queue</h4><p>python的queue，与c++标准库中的queue类似，但是它的get和put两个函数，都有一个block的形参，而且默认为True，这使得它非常适用与线程间的交互，比如只需要简单改写一下上面的例子，它就可以代替event。网上相关的资料很多，不在这里赘述了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Code/" rel="tag"># Code</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/01/python-learning-03/" rel="next" title="python-learning-03">
+                <i class="fa fa-chevron-left"></i> python-learning-03
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Leon">
+            
+              <p class="site-author-name" itemprop="name">Leon</p>
+              <div class="site-description motion-element" itemprop="description">君子励锋芒之剑<br>隐而不发</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/yiayiao" title="GitHub &rarr; https://github.com/yiayiao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:yiayiao@gmail.com" title="E-Mail &rarr; mailto:yiayiao@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#了解进程与线程"><span class="nav-number">1.</span> <span class="nav-text">了解进程与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是进程"><span class="nav-number">1.1.</span> <span class="nav-text">什么是进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是线程"><span class="nav-number">1.2.</span> <span class="nav-text">什么是线程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python线程"><span class="nav-number">2.</span> <span class="nav-text">Python线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程创建："><span class="nav-number">2.1.</span> <span class="nav-text">线程创建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#setDaemon方法和join方法"><span class="nav-number">2.2.</span> <span class="nav-text">setDaemon方法和join方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lock和Rlock"><span class="nav-number">2.3.</span> <span class="nav-text">Lock和Rlock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Condition和Event"><span class="nav-number">2.4.</span> <span class="nav-text">Condition和Event</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#队列queue"><span class="nav-number">2.5.</span> <span class="nav-text">队列queue</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
