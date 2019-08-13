@@ -326,6 +326,221 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/08/05/python-learning-06/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leon">
+      <meta itemprop="description" content="君子励锋芒之剑</br>隐而不发">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YiaYiaO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/08/05/python-learning-06/" class="post-title-link" itemprop="url">Python学习总结06——multiprocessing</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-05 21:55:32" itemprop="dateCreated datePublished" datetime="2019-08-05T21:55:32+08:00">2019-08-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-13 23:09:54" itemprop="dateModified" datetime="2019-08-13T23:09:54+08:00">2019-08-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/Basic/" itemprop="url" rel="index"><span itemprop="name">Basic</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Python的多进程，官网上multiprocessing的文档，比我在网络上看到的其他一些博客和教程写得都要好，给出链接：<a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing-programming" title="link" target="_blank" rel="noopener">点击这里</a>，建议浏览英文文档，或者中英文对照看。本文以下的内容，我基本上按照官方文档的结构进行展开，对其中部分内容给出自己的理解与总结。</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><blockquote>
+<p>multiprocessing is a package that <strong>supports</strong> spawning processes using an API similar to the threading module. The multiprocessing package <strong>offers</strong> both local and remote concurrency, effectively side-stepping the Global Interpreter Lock by using subprocesses instead of threads. Due to this, the multiprocessing module allows the programmer to fully leverage multiple processors on a given machine. It runs on both Unix and Windows.</p>
+</blockquote>
+<p>这里我直接将官网原文引用了过来，部分单词加粗强调当然是为了引起重视，multiprocessing 模块是支持创建进程，注意是<strong>支持</strong>，而不是<strong>用于</strong>，它包含了创建进程的能力，同时也<strong>提供</strong>了本地和远端的 python 进程同步的能力。如果说 multiprocessing 就是用来生成多进程的，显然不全面；同时注意一下文档有写它支持本地与远端进程间的同步，并不意味着它可以在远端服务器上创建进程。</p>
+<h3 id="进程的启动"><a href="#进程的启动" class="headerlink" title="进程的启动"></a>进程的启动</h3><p>在 multiprocessing 中，通过创建一个 Process 对象然后调用它的 start() 方法来生成进程，根据不同的平台， multiprocessing 支持三种启动进程的方法：spawn、fork 和 forkserver。spawn 直接新启动一个 python 解释器进程；fork 和 forkserver 都是调用了 unix 底层的 fork 函数，区别是 fork 会对当前进程的资源进行拷贝，而 forserver 先创建一个所谓 server 进程，再对 server 进程进行 fork，这样forserver 创建的子进程就不包含当前进程资源的拷贝。</p>
+<p>尝试执行以下的代码，将第8行 get_context 方法中的参数分别修改成 forkserver 和 spawn，能看到执行结果的差别。还可以进一步尝试将第6行的“if <strong>name</strong> == ‘<strong>main</strong>‘:” 去掉，看程序能否正常执行，分别采用 spawn、fork 和 forkserver 启动进程时有什么不同的执行结果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">()</span>:</span></span><br><span class="line">    print(q)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    q = <span class="number">1</span></span><br><span class="line">    ctx = multiprocessing.get_context(<span class="string">'fork'</span>)</span><br><span class="line">    p = ctx.Process(target=f)</span><br><span class="line">    p.start()</span><br></pre></td></tr></table></figure>
+<p>当线程的启动方式为 fork 时，以上的程序能够正常执行并且打印结果为1，原因就是 fork 创建的子进程对父进程进行了拷贝，其中就包含 q，其值为1。</p>
+<p>以上的程序通过 get_context() 来获取 context，使用 context 来设置进程的启动方式，这也可以通过 multiprocessing.set_start_method() 来设置，但是 set_start_method() 函数的效果是全局性的，当你的程序需要打包成 package 提供给别人使用时，建议使用 context 。还需要注意文档中使用 context 创建的对象在别的 context 创建的进程中可能不兼容，理解这句话可以参考以下的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">producer</span><span class="params">(q)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        q.put(<span class="string">"包子 %s"</span> % i)</span><br><span class="line">    print(<span class="string">"开始等待顾客买包子..."</span>)</span><br><span class="line">    q.join()</span><br><span class="line">    print(<span class="string">"所有的包子被取完了..."</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">while</span> q.qsize() == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">while</span> q.qsize() &gt; <span class="number">0</span>:</span><br><span class="line">        print(<span class="string">"%s 买到"</span> % n, q.get())</span><br><span class="line">        q.task_done()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    ctx = multiprocessing.get_context(<span class="string">'spawn'</span>)</span><br><span class="line">    q = ctx.JoinableQueue() <span class="comment"># 将这一行修改成 multiprocessing.JoinableQueue()试试</span></span><br><span class="line">    p = ctx.Process(target=producer, args=(q,))</span><br><span class="line">    p.start()</span><br><span class="line">    c1 = consumer(<span class="string">"小王"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="队列，管道和共享内存"><a href="#队列，管道和共享内存" class="headerlink" title="队列，管道和共享内存"></a>队列，管道和共享内存</h3><p>python进程的队列，是一个被封装的很重的东西，官网上有下面一段note：</p>
+<blockquote>
+<p><strong>Note:</strong> When an object is put on a queue, the object is pickled and a background thread later flushes the pickled data to an underlying pipe. This has some consequences which are a little surprising, but should not cause any practical difficulties – if they really bother you then you can instead use a queue created with a manager.</p>
+</blockquote>
+<p>进程 queue 基于底层的 pipe 事项，当数据放入队列和从队列取出时，它经历了一个序列化和反序列化的过程。当一个东西经过了过多的封装，我就比较倾向于认为它不太可靠，或者性能上存在问题，或者功能上尤其是并发上可能存在缺陷。不过在注重功能实现，不需要考虑工程压力的时，进程 queue 还是非常简单方便的，它的用法基本和线程 queue 相同，就不再赘述了，可以参考官网。</p>
+<p>进程间通信，基本上适用以下的几个套路：</p>
+<p>1.socket： 比较底层，想用肯定能用上，几乎所有的语言都支持，实现比较复杂<br>2.共享内存： 依赖了语言和框架，比如 python 可以在父子进程设置共享内存<br>3.pipe： 以来系统，语言和框架</p>
+<p><em>个人总结，仅供参考</em></p>
+<p>接下来着重看一下 pipe 和共享内存：</p>
+<h4 id="管道-Pipe"><a href="#管道-Pipe" class="headerlink" title="管道 Pipe"></a>管道 Pipe</h4><p>multiprocessing.Pipe([duplex]) 返回一对 Connection 对象 (conn1, conn2) 分别代表管道的两端，如果 duplex 传 True，那么这个管道是双向的，如果 duplex 传 False，那么该管道为单向的，单向的管道 conn1 只能被用于接收信息，conn2 只能被用作发送信息。想要用会 Pipe，需要熟悉 Connection 类，此外正如官网所介绍的，multiprocessing.connection 还有一些更加灵活高级的用法，了解它们可以帮助你应对更加复杂的场景。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pipe</span><br><span class="line">a, b = Pipe()</span><br><span class="line">a.send([<span class="number">1</span>, <span class="string">'hello'</span>, <span class="keyword">None</span>])</span><br><span class="line">print(b.recv())</span><br><span class="line">b.send_bytes(<span class="string">b'thank you'</span>)</span><br><span class="line">print(a.recv_bytes())</span><br></pre></td></tr></table></figure>
+<p>通过上面的例子，可以看到 Pipe 的使用并不是和多进程绑定在一起的，上例中使用了 Pipe 但是没有创建多进程，python 其他很多模块设计也体现着这一特点。</p>
+<h4 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h4><blockquote>
+<p>It is possible to create shared objects using shared memory which can be inherited by child processes.</p>
+</blockquote>
+<p>可以通过使用共享内存创建共享对象，在线程与其创建的子线程之间进行共享。内存共享通过创建 ctypes 对象来达成，在 multiprocessing 模块下，有 Value 和 Array 两个函数返回用于共享内存的 ctypes 对象；在 multiprocessing.sharedctypes 模块下，有 RawArray、RawValue、Array、Value 四个函数返回共享内存的 ctypes 对象。</p>
+<p><em>我没太搞懂 multiprocessing.Value 和 multiprocessing.sharedctypes.Value 之间的区别</em></p>
+<p>具体的实例请参加：<a href="https://docs.python.org/3.7/library/multiprocessing.html#module-multiprocessing.sharedctypes" title="link" target="_blank" rel="noopener">官网</a></p>
+<h4 id="Manager"><a href="#Manager" class="headerlink" title="Manager"></a>Manager</h4><blockquote>
+<p>Managers provide a way to create data which can be shared between different processes, including sharing over a network between processes running on different machines. A manager object controls a server process which manages shared objects. Other processes can access the shared objects by using proxies.</p>
+</blockquote>
+<p>谈到 Manager 模块，这可以说是 Python 在进程共享数据上大招，它提供的进程间的数据共享，不仅仅限于 Python 的父子进程间，还包含本机不用的 Python 进程间的数据共享，以及两个不同机器的进程间通过网络的数据共享。概述中提到的 multiprocessing 提供了远程进程间的数据共享能力，指的就是它。</p>
+<p>目前我知识将官网上的 Manager 一节粗浅的浏览了一下，深入的学习和总结留待以后用到再说了，因为确实 Manager 相对复杂一些，知识点更加细节。如果仅仅是需要创建子进程，实现数据同步，或者进程间同步，不依赖 Manager 也能实现；如果有场景，需要在多个不相干的 Python 进程间进行通信，可以考虑它。</p>
+<h4 id="Programming-guidelines"><a href="#Programming-guidelines" class="headerlink" title="Programming guidelines"></a>Programming guidelines</h4><p>最后建议看一下官网的 Programming guidelines，里面有一些非常好的编程建议以及最佳实践，唯一的缺憾是目前还没有中文翻译。</p>
+<p><em>有时间的话我来翻译一下</em></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/08/01/python-learning-05/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2136,210 +2351,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.yiayiao.com/2019/03/03/bandwagon-basic/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Leon">
-      <meta itemprop="description" content="君子励锋芒之剑</br>隐而不发">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YiaYiaO">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/03/bandwagon-basic/" class="post-title-link" itemprop="url">搬瓦工服务器常见的问题</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-03-03 21:57:30" itemprop="dateCreated datePublished" datetime="2019-03-03T21:57:30+08:00">2019-03-03</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-02 10:51:58" itemprop="dateModified" datetime="2019-05-02T10:51:58+08:00">2019-05-02</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>&emsp;&emsp;自己写这个博客，主要是记录一些事情，首先是把事情记录下来，然后再考虑把叙事讲清楚。这便是一篇重在记录的博客，在这里记录了一些使用搬瓦工服务器过程中遇到的问题，如果你恰好看到了这篇博客又遇到了相似的问题，希望能帮到你。</p>
-<h3 id="1-我的搬瓦工被墙了！"><a href="#1-我的搬瓦工被墙了！" class="headerlink" title="1. 我的搬瓦工被墙了！"></a>1. 我的搬瓦工被墙了！</h3><p>&emsp;&emsp;某一天，忽然发现，出于国家对我的保护，我的搬瓦工服务器没法访问了；然而因为我们国土很大，人很多，这种事情国家没法及时通知到我，而我又是第一次遇到这种情况，所以瞬间慌了神。不过我还是很快意识到自己的服务器IP可能被墙了，于是我首先对自己的行为进行了反思，我从未发布过不利于国家安定团结的信息，也没用自己的服务器干过坏事，所以我的IP地址被墙，应该只是一场误会；经过反思，我放下了一百个心。下一次如果你的服务器也被墙了，也先反思反思，即使是国外服务器，也不意味着自己想干啥就能干啥。为了指导你进一步进行反思，这里我们再给出一个链接：<a href="https://banwagong.cn/why-feng-ip.html" title="install" target="_blank" rel="noopener">为什么搬瓦工VPS主机IP容易封</a>，帮助你进行更专业的反思。</p>
-<p>&emsp;&emsp;既然自己没有做过坏事，现在找回自己搬瓦工服务器！首先我们确认自己的服务器确实被墙了，可以参考下面这篇教程，写得很不错：<a href="https://www.banwago.com/1265.html" title="install" target="_blank" rel="noopener">怎样检查搬瓦工IP被墙</a>，简而言之就是通过两个专业的网站：<a href="http://ping.chinaz.com/" title="install" target="_blank" rel="noopener">站长工具</a>和<a href="http://ping.pe/" title="install" target="_blank" rel="noopener">ping.pe</a>对自己的IP地址进行ping操作。</p>
-<p>&emsp;&emsp;搬瓦工官网上也能检测自己的IP是不是被墙了，但是这个法子并不是很靠谱，可能会误报。搬瓦工确实是一款良心产品，允许你每10个星期免费更换一次IP，前提是你的IP地址确实被墙了。在官网上检测IP是否被墙和更换免费IP是同一个URL，点击“<a href="https://kiwivm.64clouds.com/main-exec.php?mode=blacklistcheck" title="install" target="_blank" rel="noopener">更换免费IP</a>”直达，一个非常小清新的页面，不说你也知道该点哪：</p>
-<img src="/2019/03/03/bandwagon-basic/block_list_check.PNG" title="[官网测试自己的IP是否被墙]">
-<p>&emsp;&emsp;点击Test Main IP进行测试，如果测出你的IP被墙了，网页下方会出现一个更换IP地址的链接，点击可申请一个新的IP地址。这个网页的登录做得不太人性，需要输入“Server IP”和密码，而不是用户名和密码，可能是为了方便名下有多个服务器的土豪进行管理，但是敢问有几个人真的能记住自己的“Server IP”呢，反正我一直记不住。</p>
-<h3 id="2-我的搬瓦工太慢了"><a href="#2-我的搬瓦工太慢了" class="headerlink" title="2. 我的搬瓦工太慢了!"></a>2. 我的搬瓦工太慢了!</h3><p>&emsp;&emsp;一只都有这样的困扰，自己的搬瓦工服务器很慢，尤其是使用家里的移动宽带时，播放视频往往得用最低的清晰度，使用终端去连接经常需要重试好几次。通过搜索的尝试，总结了以下三个手段，可以提升搬瓦工服务器的访问速度，它们分别是BBR、FinalSpeed和net_speeder。</p>
-<h4 id="2-1-BBR"><a href="#2-1-BBR" class="headerlink" title="2.1 BBR"></a>2.1 BBR</h4><p>&emsp;&emsp;管理搬瓦工服务器，在选择系统进行安装时，选择带后缀bbr的，安装完成之后，BBR应该就是默认开启的。你可能和我一样，过了一段时间之后，已经忘了自己的服务器是否在已经在安装系统了已经支持BBR了，所以建议在安装之前，先使用如下的命令检查一下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep bbr</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;返回值有tcp_bbr模块则说明BBR已经启动。</p>
-<p>&emsp;&emsp;如果检测到BBR没有启动，你则需要安装BBR，简而言之，使用BBR包含两部操作，升级Ubuntu内核，然后配置/etc/sysctl.conf系统文件。去谷歌搜索一下“Ubuntu安装BBR”，能搜出很多教程，在这里我介绍一个相对简单的方法，有牛人将BBR安装配置操作整理为了一份一键安装脚本，极大方便了BBR的安装，操作如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh &amp;&amp; chmod +x bbr.sh &amp;&amp; ./bbr.sh</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;详情参考：<a href="https://teddysun.com/489.html" title="config_bbr" target="_blank" rel="noopener">秋水逸冰的专业教程</a></p>
-<h4 id="2-2-net-speeder"><a href="#2-2-net-speeder" class="headerlink" title="2.2 net_speeder"></a>2.2 net_speeder</h4><p>&emsp;&emsp;net_speeder采用了多倍发包的方式，用流量换速度，提升了搬瓦工服务器的访问效率。先给出一篇写得很不错的net_speeder安装教程：<a href="https://www.cmsky.com/vps-net-speeder/" title="config net_speeder" target="_blank" rel="noopener">厘米天空</a> ，我操作的时候基本参考了厘米天空的这篇教程。</p>
-<p>&emsp;&emsp;net_speeder在Ubuntu上可以通过下面的命令进行一键编译：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://raw.githubusercontent.com/tennfy/debian_netspeeder_tennfy/master/debian_netspeeder_tennfy.sh</span><br><span class="line">chmod a+x debian_netspeeder_tennfy.sh</span><br><span class="line">bash debian_netspeeder_tennfy.sh</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;注意只是编译，而不是安装，上面的命令执行完成之后，会在当前路径下编译出一个net_speeder文件，建议将编译出来的文件放到/usr/local/bin/目录下，方便执行。</p>
-<ul>
-<li>启动net_speeder：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">net_speeder eth0 &quot;ip&quot;</span><br><span class="line">#这里的eth0需要替换为自己服务器的网卡名称，而&quot;ip&quot;千万别自作主张替换为了本机的IP地址；</span><br><span class="line">#使用以下的命令则可以指定对某个端口进行加速</span><br><span class="line">net_speeder eth0 &quot;tcp src port 8388 or port 8389&quot;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>关闭net_speeder：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#简单明了的系统命令</span><br><span class="line">killall net_speeder</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;然后可以根据自己的需要，添加开机启动，或者添加crontab定时任务，让net_speeder在固定的时间开启，在固定的时间关闭，请参考<a href="https://www.cmsky.com/vps-net-speeder/" title="config net_speeder" target="_blank" rel="noopener">厘米天空</a>的教程。</p>
-<h4 id="2-3-FinalSpeed"><a href="#2-3-FinalSpeed" class="headerlink" title="2.3 FinalSpeed"></a>2.3 FinalSpeed</h4><p>&emsp;&emsp;写到这里还有一点激动，当FinalSpeed安装完成，可以明显感受到通过搬瓦工访问视频网站的速度获得了极大的提升。不同于BBR和net_speeder，FinalSpeed除了需要在服务器上启动服务之外，还需要在本地安装FinalSpeed客户端，这给FinalSpeed的使用带来了很大的局限，而在手机上使用FinalSpeed当前是不可能的。</p>
-<p>&emsp;&emsp;借鉴了别人的教程，首先还是要给出参考的：<a href="https://www.wervps.com/we/1089.html" title="config FinalSpeed" target="_blank" rel="noopener">教程连接</a> 。在服务器上安装FinalSpeed，也有一键式的命令：</p>
-<ul>
-<li>一键安装：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/finalspeed/master/install_fs.sh &amp;&amp; bash install_fs.sh</span><br></pre></td></tr></table></figure>
-<ul>
-<li>一键卸载：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/finalspeed/master/install_fs.sh &amp;&amp; bash install_fs.sh uninstall</span><br></pre></td></tr></table></figure>
-<ul>
-<li>操作命令：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#启动：</span><br><span class="line">/etc/init.d/finalspeed start</span><br><span class="line">#停止命令：</span><br><span class="line">/etc/init.d/finalspeed stop</span><br><span class="line">#查看状态：</span><br><span class="line">/etc/init.d/finalspeed status</span><br><span class="line">#查看日志：</span><br><span class="line">tail -f /fs/server.log</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;FinalSpeed依赖了Java，如果搬瓦工服务器上没有安装Java，FinalSpeed安装时会报错，Java的安装也很简单，先在自己的终端上敲一个java命令，然后按照报错提示安装相应的java版本就行了。上文提到的安装教程还有一个不足之处，我自测时，上文链接到的finalspeed_install1.0的客户端版本已经不可用了，给出finalspeed_install1.2客户端下载链接：<a href="https://raw.githubusercontent.com/91yun/finalspeed/master/finalspeed_install1.12.exe" title="config net_speeder" target="_blank" rel="noopener">finalspeed_install1.2.exe</a></p>
-<p>&emsp;&emsp;客户端的配置还是可以参考前面的教程，这里给出我配置完成之后的net_speeder客户端截图：</p>
-<img src="/2019/03/03/bandwagon-basic/finalspeed_client.PNG" title="[FinalSpeed客户端配置]">
-<p>&emsp;&emsp;物理宽带的下载速度和上传速度请按照自己实际的网速进行配置。配置完成之后，可以通过本地IP加本地端口的方式，访问服务器IP的加速端口。</p>
-<p>&emsp;&emsp;写在最后，当记录某项操作时，我希望自己能弄清楚背后的原理，无奈之BBR、FinalSpeed和net_speeder三者间，之后net_speeder比较容易理解，理解BBR和FinalSpeed都需要掌握相当的计算机网络知识，自己一时半会没法深入理解，所以先在这里立下一个Flag，后面再补上BBR和FinalSpeed的讲解。在此先感谢为我们创建了这些好用的工具的程序员。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2383,7 +2399,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
