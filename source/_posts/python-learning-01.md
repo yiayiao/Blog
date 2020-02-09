@@ -43,7 +43,7 @@ Python3分别用int类型和float类型表示整数与浮点数，问题来了�
 
 > The sys.maxint constant was removed, since there is no longer a limit to the value of integers. However, sys.maxsize can be used as an integer larger than any practical list or string index. It conforms to the implementation’s “natural” integer size and is typically the same as sys.maxint in previous releases on the same platform (assuming the same build options).
 
-与int不同，float类型确实有最大值的，可以通过sys.float_info.max和sys.float_info.min分别获取float的最大值和最小值。它们分别为：1.7976931348623157e+308 和 2.2250738585072014e-308，Python的float类型的范围与C++的Double类型的范围相同，C++的Double类型的范围可以通过执行以下代码查看：
+与int不同，float类型确实有最大值的，可以通过sys.float_info.max和sys.float_info.min分别获取float的最大值和最小值。它们分别为：1.7976931348623157e+308 和 2.2250738585072014e-308，在Ubuntu环境上测试，Python的float类型的范围与C++的Double类型的范围相同，C++的Double类型的范围可以通过执行以下代码查看：
 
 ``` C++
 #include <iostream>
@@ -56,9 +56,94 @@ int main() {
 }
 ```
 
-如果我们需要进行浮点型的大数运算，可以通过Decimal实现，需要import引入decimal模块，不再这里赘述，不要用float类型处理银行汇率等对精度有很高要求的浮点运算，这个道理不必多讲。
+Python3的float还包含了正无穷和负无穷的表示，float("inf")可以表示正无穷，float("-inf")可以表示负无穷。既然float能够表示的数据范围有限，Python怎么进行浮点型的大数计算呢，可以通过Decimal实现，需要import引入decimal模块，不再这里赘述。
 
-// float 类型的比较
+float不光有数据范围的限制，float之间的计算还需要考虑精度的损失，两个浮点数据之间不能直接比较。sys.float_info.epsilon可以表示机器能够区分出的两个浮点数的最小差别，判断两个函数是否相等，可以定义函数如下：
+
+``` Python
+def is_float_equal(a,  b):
+    return abs(a - b) <= sys.float_info.epsilon
+```
+
+此外，还可以通过import math模块，通过math.isclose(a, b, *, rel_tol=1e-09, abs_tol=0.0)函数判断两个浮点数是否相等，按照官网描述，该函数实现逻辑如下：
+
+``` Python
+return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+```
+
+稍加留心，我们可以注意到math.isclose函数默认比较参数间的相对误差，可以使用match.isclose重写上文的is_float_equal函数，比较两个浮点数据的绝对误差：
+
+``` Python
+math.isclose(a, b, rel_tol=0, abs_tol=sys.float_info.epsilon)
+```
+
+### 列表 - list
+
+Python用列表list表示了Java和C++中的Array，List和Vector等类型，这确实省去了很多的麻烦，接下来从“增删改查”看看列表的操作。
+
+1.“增”，下表分为从列表的末尾或者中间，添加列表或者单个元素：
+
+|操作|函数实现|切片实现|
+|:----|:---|:---|
+|在my_list末尾插入列表|my_list.extent(another_list)|my_list[len(my_list):]=another_list|
+|在my_list末尾插入元素|my_list.append(element)|my_list[len(my_list):]=[element,]|
+|在my_list的index下标位置插入列表|---|my_list[index:index] = another_list|
+|在my_list的index下标位置插入元素|my_list.insert(index, element)|my_list[index:index]=[element,]|
+
+不由得感叹，切片真是一个无比神奇的东西！注意通过切片或者extent函数插入字符串str时，会将str作为列表处理，我们看下面一段代码：
+
+``` Python
+my_list = [1, 2, 3]
+my_list.extent('123')
+print(my_list)
+```
+
+它的执行结果是：1,2,3,'1','2','3'，而不是：1,2,3,'1,2,3'。
+
+2.“删”，下表分别从列表的末尾或者中间删除元素
+
+|操作|函数实现|切片实现|
+|:----|:---|:---|
+|删除my_list末尾的元素|my_list.pop()|my_list[-1:0]=[]|
+|删除my_list下标为index的元素|del my_list[index]|my_list[index:index+1]=[]|
+
+一般不会遇到从列表中删除列表这种需求，如果遇到了，也可以使用切片实现，比如保留my_list中前三个元素，其他全部删除：my_list[3:] = []
+
+3.“改”
+
+更改列表中的元素，最自然而然的，就是使用下标操作，或者切片，不再赘述。
+
+4.“查”
+
+说到查，最自然而然的，是想到find关键字，然而很遗憾，Python并没有find函数，因为它有另一个关键字：in，或者我们可以转变一下思维，从列表my_list中查找element元素，可以转而判断my_list中element元素的个数count是否大于0，或者求element元素在my_list中的下标index。
+
+``` Python
+my_list = [1,2,3]
+element = 1
+#判断element是否在my_list中
+if element in my_list:
+    print("exist")
+#或者
+if my_list.count(element) > 0:
+    print("exist")
+#或者下面这样
+try:
+    my_list.index(element)
+except ValueError:
+    print('not exist')
+else:
+    print('exist')
+```
+
+列表的index函数在这里略显诡异，如果element在my_list中不存在，它并没有返回-1或者其他的无效的值，而是直接抛出异常。我觉得这又是Python思想的一个体现，解决一个问题一种实现就足够了，第二种第三种实现都是多余的，用index函数判断元素是否存在就是多余的，不被推荐的实现。
+
+### 元组 - tuple
+
+“元组（tuple）”可以被看做不能被修改的列表，因为不能被修改，元组可以作为字典的key，而列表不行。当一个函数包含了多个返回值时，使用type命令查看该函数的返回值，可以看到其类型是一个元组。
+
+### 字符串 - str
+
+
 
 ### 一些思考
 
