@@ -1,6 +1,8 @@
-/db.json
-/themes/*
-!/themes/load_themes.sh
-!/themes/_config.yml
-/public/
-
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+_multiconfig.yml
